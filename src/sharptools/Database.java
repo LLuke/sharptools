@@ -1,7 +1,7 @@
 /*
  * @ (#)Database.java
  *
- * $Id: Database.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
+ * $Id: Database.java,v 1.2 2001/11/16 17:51:11 oleglebedev Exp $
  *
  * Created on May 19, 2001, 09:10:28 PM
  *
@@ -40,7 +40,7 @@ import javax.swing.*;
  * This contains database operations on the spreadsheet table
  *
  * @author  Shiraz Kanga
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class Database
 {
@@ -185,10 +185,7 @@ public class Database
 	// JDBC exposes must meta data as ResultSets
 	// Change the second parameter below to retrieve information
 	// about a particular schema in the database
-        String tableNamePatern = "%report";
-        String[] types = new String[1];
-        types[0] = "VIEW";
-	ResultSet dbResults = dma.getTables (null, null, tableNamePatern, types);
+	ResultSet dbResults = dma.getTables (null, null, "%", null);
 	Vector vec = new Vector ();
 
 	/*
