@@ -1159,13 +1159,12 @@ final public class SharpTools extends JFrame implements ListSelectionListener {
 	// Get event source
 	ListSelectionModel lsm = (ListSelectionModel)e.getSource();
 	
-	if (lsm.isSelectionEmpty()) {
+	if (lsm.isSelectionEmpty() && table.getColumnCount() > baseCol &&
+	    table.getRowCount() > baseRow) {
 	    // always set selection
 	    table.setRowSelectionInterval(baseRow, baseRow);
 	    table.setColumnSelectionInterval(baseCol, baseCol);
-	} else {
-	    // Get selected column
-            /*
+	}/* else {
 	    if (table.getSelectedColumn() < baseCol) {
 		int columnCount = table.getColumnCount();
                 if (columnCount > baseCol) {
@@ -1176,8 +1175,8 @@ final public class SharpTools extends JFrame implements ListSelectionListener {
                     table.setColumnSelectionInterval(baseCol, columnCount - 1);
                     table.removeColumnSelectionInterval(baseRow,baseRow);
                 }
-                }*/
-	}
+                }
+		}*/
     }
 
     public void resetSelection() {

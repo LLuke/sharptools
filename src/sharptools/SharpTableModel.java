@@ -933,15 +933,18 @@ public class SharpTableModel extends DefaultTableModel {
         SharpClipboard scrap = new SharpClipboard(this, range, true);
 
         JTable table = sharp.getTable();
+	TableColumnModel tm = table.getColumnModel();
+	TableColumn column = tm.getColumn(col);
         //add the new columns to the end
         for(int i = 0; i < insertNum; i++) {
+	    int curCol = lastCol+i+1;
             addColumn();
-	    TableColumnModel tm = table.getColumnModel();
-	    TableColumn column = tm.getColumn(tm.getColumnCount() - 1);
-            TableColumn newcol = new TableColumn(tm.getColumnCount(), 
-                                                 column.getPreferredWidth());
-            newcol.setHeaderValue(new Character((char)('A' + lastCol +
-                                                       1 + i)));
+	    TableColumn newcol = new TableColumn(curCol, 
+						 column.getPreferredWidth());
+	    //	    TableColumn column = tm.getColumn(tm.getColumnCount() - 1);
+	    //            TableColumn newcol = new TableColumn(tm.getColumnCount(), 
+	    //                                                 column.getPreferredWidth());
+            newcol.setHeaderValue(Node.translateColumn(curCol));
 	    tm.addColumn(newcol);
         }
         

@@ -229,19 +229,15 @@ public class Node {
 
 	StringBuffer buf = new StringBuffer();
 	
-	String colstr = "";
-
 	int div = 1;
 
 	while (div > 0) {
 	    div = (column-1)/26;
-	    buf.append((char)('A'+(column - div*26 - 1)));
-	    buf.append(colstr);
-	    colstr = buf.toString();
+	    buf.insert(0, (char)('A'+(column-1 - div*26)));
 	    column = div;
 	}
 	
-	return colstr;
+	return buf.toString();
     }
 
     /**
