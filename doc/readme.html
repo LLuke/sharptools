@@ -1,0 +1,236 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>README Sharp Tools Spreadsheet Version 1.0 for Java(TM) 2 SDK, v1.3.0 </TITLE>
+<META NAME="description" CONTENT="README Sharp Tools Spreadsheet Version 1.0 for Java(TM) 2 SDK, v1.3.0 ">
+<META NAME="keywords" CONTENT="readme">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<STYLE>
+body {
+	background: white;
+	color: black;
+}
+a {
+	text-decoration: none;
+	background: transparent;
+}
+a:link {
+	text-decoration: none;
+	color: blue;
+	background: transparent;
+}
+a:visited {
+	color: blue;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+</STYLE>
+</HEAD>
+<BODY >
+
+<P>
+<H1 ALIGN="CENTER">
+README <BR>
+Sharp Tools Spreadsheet <BR>
+Version 1.0 <BR>
+for Java(TM) 2 SDK, v1.3.0 <BR>
+</H1>
+<P ALIGN="CENTER"><STRONG>Sharp Tools Software
+<BR>
+<TT>&lt;sharp@cs.columbia.edu&gt;</TT></STRONG></P>
+<P ALIGN="LEFT"></P>
+
+<P>
+<BR>
+
+<H2><A NAME="SECTION00010000000000000000">
+Contents</A>
+</H2>
+<!--Table of Contents-->
+<UL>
+<LI><A NAME="tex2html5"
+ HREF="readme.html">Contents</A>
+<LI><A NAME="tex2html6"
+ HREF="readme.html#SECTION00020000000000000000">Introduction</A>
+<LI><A NAME="tex2html7"
+ HREF="readme.html#SECTION00030000000000000000">Features</A>
+<LI><A NAME="tex2html8"
+ HREF="readme.html#SECTION00040000000000000000">Sharp Tools Spreadsheet Documentation</A>
+<LI><A NAME="tex2html9"
+ HREF="readme.html#SECTION00050000000000000000">System Requirements</A>
+<LI><A NAME="tex2html10"
+ HREF="readme.html#SECTION00060000000000000000">Installation</A>
+<LI><A NAME="tex2html11"
+ HREF="readme.html#SECTION00070000000000000000">Bug Reports and Feedback</A>
+<LI><A NAME="tex2html12"
+ HREF="readme.html#SECTION00080000000000000000">Contents of the Sharp Tools Spreadsheet Package</A>
+<LI><A NAME="tex2html13"
+ HREF="readme.html#SECTION00090000000000000000">Credits</A>
+</UL>
+<!--End of Table of Contents-->
+
+<H1><A NAME="SECTION00020000000000000000">
+Introduction</A>
+</H1>
+<P>Sharp Tools spreadsheet was originally a Software Engineering course project
+finished in the fall of 2000 by five CS students at Columbia University. It
+is not a commecial product, nor is it meant to replace StarOffice, but it has
+all the basic functionality as a spreadsheet.  We also hope people can learn
+from the code.
+</P>
+<H1><A NAME="SECTION00030000000000000000">
+Features</A>
+</H1>
+Sharp Tools Spreadsheet Version 1.0 fully implements various features, such
+as:
+<UL>
+<LI>File Operations
+	<UL>
+<LI>Open and Save files  using a tab-delimited format (<TT>*.sts</TT>) that is compatible with other existing spreadsheet applications
+	</UL>
+<LI>Editing Operations
+	<UL>
+<LI>Undo and Redo functionality, allowing for the recovery of changes up to the last file load
+<LI>Cut, Copy, and Paste functions
+<LI>One-click cell deletion
+<LI>Find and Find Next, allowing for easy searching
+	</UL>
+<LI>Table Operations
+	<UL>
+<LI>Row and column range selection
+<LI>Insert and Delete Row and Column operations, allowing for table resizing
+<LI>Fill Range, allowing for simple input of repetitive entries
+<LI>Sort Row and Column, for easier analysis of data
+	</UL>
+<LI>Printing
+	<UL>
+<LI>Windows and Unix printing capability
+	</UL>
+<LI>Histograms
+	<UL>
+<LI>Multiple Histograms
+<LI>Regraphable
+<LI>Configurable
+	</UL>
+<LI>Help
+	<UL>
+<LI>Built-in Help Browser
+<LI>Function Help
+	</UL>
+<LI>Formula Operations
+	<UL>
+<LI>Dynamic formula value updating
+<LI>Variable-length parameter input to formulas (using string
+literals, relative addressing, absolute addressing, and range
+specification)
+<LI>Symbolic formula operations, including: addition,
+subtraction, floating-point division, multiplication, modulo, and exponent
+<LI>Formula functions include: summation (<TT>SUM</TT>), average
+(<TT>AVERAGE</TT>), count (<TT>COUNT</TT>), minimum (<TT>MIN</TT>),
+maximum(<TT>MAX</TT>), absolute value (<TT>ABS</TT>), range (<TT>RANGE</TT>), sine
+(<TT>SIN</TT>), cosine (<TT>COS</TT>), tangent (<TT>TAN</TT>), arcsine
+(<TT>ASIN</TT>), arccosine (<TT>ACOS</TT>), arctangent (<TT>ATAN</TT>), rounding
+(<TT>ROUND</TT>), square root (<TT>SQRT</TT>), logarithm (<TT>LOG</TT>), mean
+deviation (<TT>MEANDEV</TT>), standard deviation (<TT>STDDEV</TT>), pi
+(<TT>PI</TT>), and e (<TT>E</TT>)
+	</UL>
+<LI>Security
+	<UL>
+<LI>A user-defined password option
+	</UL>
+<LI>Preferences
+	<UL>
+<LI>User-specified startup options via the <TT>sharptools.cfg</TT> file
+	</UL></UL>
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+Sharp Tools Spreadsheet Documentation</A>
+</H1>
+The on-line Sharp Tools Spreadsheet Documentation [<A NAME="tex2html1"
+ HREF="http://www.cs.columbia.edu/sharptools">web</A>] contains complete javadocs 
+and reference pages for Sharp Tools Spreadsheet. This documentation is also available 
+in the <TT>doc</TT> directory. 
+<P>
+
+<H1><A NAME="SECTION00050000000000000000">
+System Requirements</A>
+</H1>
+Sharp Tools Spreadsheet requires Java 2 SDK, v 1.3.0 or above on Windows, Linux, 
+and Solaris.<TT><BR>
+</TT> 
+<P> You should have about 1 MB of free disk space before attempting to install 
+  the Sharp Tools Spreadsheet package. 
+<P>
+
+<H1><A NAME="SECTION00060000000000000000">
+Installation</A>
+</H1>
+To install Sharp Tools Spreadsheet, simply copy the <TT>bin</TT> directory from the distribution  to your hard drive.  From within that directory you may use the <TT>sharptools</TT> bash script to run the software.  If the script if run with a parameter, that file will be loaded.
+
+<P> <TT>java SharpTools ../doc/sample.sts</TT> 
+<P> Alternatively, Windows users may simply double-click on <TT>SharpTools.bat</TT> 
+  within the same directory, and Linux/Unix users can run the script <tt>SharpTools</tt>.
+<P> Users who wish to install from the source may do so using <TT>gnumake</TT> 
+  and executing the following commands (make sure the correct javac is in your 
+  PATH): 
+<P> <TT>cd src<BR>
+  make (on Unix/Linux)</TT><TT><br>
+  <i>or</i><br>
+  </TT><TT> javac SharpTools.java (on Windows)<BR>
+  </TT> 
+<P>
+
+<H1><A NAME="SECTION00070000000000000000">
+Bug Reports and Feedback</A>
+</H1>
+You may submit bug reports and comments via <A NAME="tex2html2"
+ HREF="http://www.cs.columbia.edu/sharptools/">http://www.cs.columbia.edu/sharptools/</A>. 
+<P>
+
+<H1><A NAME="SECTION00080000000000000000">
+Contents of the Sharp Tools Spreadsheet Package</A>
+</H1>
+This section contains a general summary of the files and directories in the Sharp 
+Tools Spreadsheet package.
+<ul>
+  <li>src: all source files. </li>
+  <li>doc: documentation. Javadocs and manuals for the Sharp Tools Spreadsheet, 
+    sample spreadsheet files, as well as a manifest of the entire contents of 
+    the package </li>
+  <li>bin: pre-compiled class files and a SharpTools.bat for Windows.. </li>
+  <li>testing: testing documents. </li>
+</ul>
+<P>
+
+<H1><A NAME="SECTION00090000000000000000">
+Credits</A>
+</H1>
+Sharp Tools Spreadsheet is a product of the Sharp Tools Software Engineering Team:
+<UL>
+  <LI>Hua Zhong (Team Leader)
+  <LI>Ricky Chin
+<LI>Daniel Goldberg
+<LI>Andrei Scudder
+<LI>Daniel Medina
+</UL>
+<P>Contact us by email: <a href="sharp@cs.columbia.edu">sharp@cs.columbia.edu</a>
+<P>Contact us online at <A NAME="tex2html4"
+ HREF="http://www.cs.columbia.edu/sharptools">http://www.cs.columbia.edu/sharptools</A> 
+<P>
+<BR><HR>
+<ADDRESS>
+<I>Daniel Medina</I>
+<BR><I>2000-12-06</I>
+</ADDRESS>
+</BODY>
+</HTML>

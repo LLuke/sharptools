@@ -1,0 +1,232 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Functions</TITLE>
+<META NAME="description" CONTENT="Functions">
+<META NAME="keywords" CONTENT="manual">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="manual.css">
+<LINK REL="next" HREF="node14.html">
+<LINK REL="previous" HREF="node12.html">
+<LINK REL="up" HREF="node10.html">
+<LINK REL="next" HREF="node14.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html225"
+ HREF="node14.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html222"
+ HREF="node10.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html216"
+ HREF="node12.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A> 
+<A NAME="tex2html224"
+ HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents_motif.gif"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html226"
+ HREF="node14.html">Errors</A>
+<B> Up:</B> <A NAME="tex2html223"
+ HREF="node10.html">Formulas</A>
+<B> Previous:</B> <A NAME="tex2html217"
+ HREF="node12.html">Symbolic Operators</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00063000000000000000">
+Functions</A>
+</H2>
+Functions are predefined formulas that perform calculations by using specific values, called arguments, in a particular order or structure.
+
+<P>
+Arguments can be numbers or cell references.  A cell reference can be a single cell or a range of cells.  A single cell can use relative addressing (<TT>A1</TT>) or absolute addressing (<TT>$B$5</TT>).  A range of cells is specified by a pair of diagonal cells (<TT>A1:C5</TT> or <TT>$A$1:$C:$5</TT>).  Different functions have difference requirements on the number or type of parameters.
+
+<P>
+The structure of a function begins with the an equal sign (<TT>=</TT>), the function name, an opening parenthesis, the arguments for the function separated by commas, and a closing parenthesis.
+
+<P>
+<TT>=FUNCTION(ARGUMENT1,ARGUMENT2,...)</TT>
+
+<P>
+Sharp Tools Spreadsheet implements various symbolic formula operations:
+
+<P>
+<UL>
+<LI><TT>ABS</TT>
+
+<P>
+usage: <TT>=ABS(argument)</TT>
+
+<P>
+Returns the absolute value of is argument.
+
+<P>
+Example: <TT>=ABS(-1)</TT> returns <TT>1</TT>.
+<LI><TT>AVERAGE</TT>
+
+<P>
+usage: <TT>=AVERAGE(argument1,argument2,...)</TT>
+
+<P>
+Returns the average (arithmetic mean) of its arguments.
+<LI><TT>COUNT</TT>
+
+<P>
+usage: <TT>=COUNT(argument1,argument2,...)</TT>
+
+<P>
+Returns the number of its arguments.
+
+<P>
+Example: <TT>=COUNT(A1:A25,B1)</TT> returns <TT>26.0</TT>.
+<LI><TT>E</TT>
+
+<P>
+usage: <TT>=E()</TT>
+
+<P>
+Returns an approximation of the golden mean.  Takes no arguments.
+
+<P>
+Example: <TT>=E()</TT> returns <TT>2.7182817</TT>
+<LI><TT>INT</TT>
+
+<P>
+usage: <TT>=INT(argument)</TT>
+
+<P>
+Returns the integer portion of its argument.
+
+<P>
+Example: <TT>=INT(94.99)</TT> returns <TT>94.0</TT>.
+<LI><TT>LOG</TT>
+
+<P>
+usage: <TT>=LOG(argument)</TT>
+
+<P>
+Returns the logarithm base <I>e</I> of its argument.
+
+<P>
+Example: <TT>=LOG(E()*E())</TT> returns <TT>2.0</TT>.
+<LI><TT>MAX</TT>
+
+<P>
+usage: <TT>=MAX(argument1,argument2,...)</TT>
+
+<P>
+Returns the largest number among its arguments.
+
+<P>
+Example:<TT>=MAX(99.99,100,99.9999)</TT> returns <TT>100.0</TT>.
+<LI><TT>MEANDEV</TT>
+
+<P>
+usage: <TT>=MEANDEV(argument1,argument2,...)</TT>
+
+<P>
+Returns the largest average absolute deviation of its arguments.
+<LI><TT>MEDIAN</TT>
+
+<P>
+usage: <TT>=MEANDEV(argument1,argument2,...)</TT>
+
+<P>
+Returns the largest average absolute deviation of its arguments.
+<LI><TT>MIN</TT>
+
+<P>
+usage: <TT>=MIN(argument1,argument2,...)</TT>
+
+<P>
+Returns the largest average absolute deviation of its arguments.
+<LI><TT>PI</TT>
+
+<P>
+usage: <TT>=PI()</TT>
+
+<P>
+Returns an approximation of <I>pi</I>.  Takes no arguments.
+<LI><TT>RANGE</TT>
+
+<P>
+usage: <TT>=RANGE(argument1,argument2,...)</TT>
+
+<P>
+Returns the difference between MAX and MIN of its arguments.
+<LI><TT>ROUND</TT>
+
+<P>
+usage: <TT>=ROUND(argument)</TT>
+
+<P>
+Returns the nearest integer value of its argument.
+<LI><TT>SQRT</TT>
+
+<P>
+usage: <TT>=SQRT(argument)</TT>
+
+<P>
+Returns the square root of its argument.
+<LI><TT>SUM</TT>
+
+<P>
+usage: <TT>=SUM(argument1,argument2,...)</TT>
+
+<P>
+Adds up the specified arguments.
+<LI><TT>STDDEV</TT>
+
+<P>
+usage: <TT>=STDDEV(argument1,argument2,...)</TT>
+
+<P>
+Returns the standard deviation of its arguments.
+<LI><TT>TRIG</TT>
+
+<P>
+<TT>TRIG</TT> can be any one of the trigonometric functions <TT>SIN</TT>, <TT>COS</TT>, <TT>TAN</TT>, <TT>ASIN</TT>, <TT>ACOS</TT>, or <TT>ATAN</TT>.  All trigonometric functions take only one parameter input, which is specified in radians.
+
+<P>
+usage: <TT>=TRIG(argument)</TT>
+
+<P>
+Example: <TT>=COS(2*PI())</TT> returns <TT>1.0</TT>.
+</UL><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html225"
+ HREF="node14.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html222"
+ HREF="node10.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html216"
+ HREF="node12.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A> 
+<A NAME="tex2html224"
+ HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents_motif.gif"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html226"
+ HREF="node14.html">Errors</A>
+<B> Up:</B> <A NAME="tex2html223"
+ HREF="node10.html">Formulas</A>
+<B> Previous:</B> <A NAME="tex2html217"
+ HREF="node12.html">Symbolic Operators</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Daniel Medina</I>
+<BR><I>2000-12-10</I>
+</ADDRESS>
+</BODY>
+</HTML>
