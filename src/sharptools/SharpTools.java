@@ -1,11 +1,10 @@
 /*
  * @(#)SharpTools.java
- *
- * $Id: SharpTools.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
- *
+ * 
+ * $Id: SharpTools.java,v 1.176 2001/06/09 05:15:40 huaz Exp $
+ * 
  * Created on October 10, 2000, 1:15 AM
  */
-package sharptools;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -27,15 +26,9 @@ import java.net.*;
  * @author  Daniel Goldberg (initial UI)
  * @author  Andrei Scudder, Daniel Medina (more work)
  * @author  Hua Zhong (complete for v1.0)
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.176 $
  */
 final public class SharpTools extends JFrame implements ListSelectionListener {
-
-    // file reader
-    public static SharpFileReader fileReader = new SharpFileReader();
-
-    // is it used from an applet
-    private static boolean isApplet = false;
 
     protected int maxNumPage = 1;
 
@@ -58,8 +51,8 @@ final public class SharpTools extends JFrame implements ListSelectionListener {
     private URL url;
 
     // these are used to access our global objects
-    static public Config getConfig() { return config; }
-
+    static public Config getConfig() { return config; }    
+    
     public History getHistory() { return history; }
     public JTable getTable() { return table; }
     public SharpTableModel getTableModel() { return tableModel; }
@@ -91,7 +84,7 @@ final public class SharpTools extends JFrame implements ListSelectionListener {
     private JMenuItem findNextMenuItem;
     private JCheckBoxMenuItem showHistogramMenuItem;
     private JCheckBoxMenuItem showFunctionsMenuItem;
-
+    
     private JButton saveButton;
     private JButton passwordButton;
     private JButton undoButton;
@@ -116,7 +109,7 @@ final public class SharpTools extends JFrame implements ListSelectionListener {
     final private ImageIcon insertColumnIcon = getImageIcon("insertcolumn.gif");
     final private ImageIcon deleteRowIcon = getImageIcon("deleterow.gif");
     final private ImageIcon deleteColumnIcon = getImageIcon("deletecolumn.gif");
-
+    
     final private ImageIcon sortIcon = getImageIcon("sort.gif");
     //    final private ImageIcon showIcon = getImageIcon("show.gif");
     final private ImageIcon chartIcon = getImageIcon("chart.gif");
@@ -124,19 +117,12 @@ final public class SharpTools extends JFrame implements ListSelectionListener {
 
     public static int baseRow = 0;
     public static int baseCol = 1;
-
-
+    
     /** Creates new SharpTools */
     public SharpTools() {
-
+	
         super("Sharp Tools Spreadsheet");
 	//	setIconImage(Toolkit.getDefaultToolkit().getImage("tools.jpg"));
-
-        //this.isApplet = isApplet.booleanValue();
-
-        // read settings from config file
-        SharpTools.initSettings();
-System.out.println("is config null? " + (config == null));
 
 	int x = config.getInt("X");
 	int y = config.getInt("Y");
@@ -146,7 +132,7 @@ System.out.println("is config null? " + (config == null));
 	if (x>=0 && y>=0 &&
 	    x<(int)scrdim.getWidth() && y <(int)scrdim.getHeight())
 	    setLocation(x, y);
-
+	
 	setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         // get content pane
 	container = this.getContentPane();
@@ -157,7 +143,7 @@ System.out.println("is config null? " + (config == null));
 
 	// create the Functions combobox in the table
 	funcList = HelpOp.createFunctionListComponent(this, table);
-
+	
 	// set up fileMenu
         fileMenu = new JMenu("File", true);
 	fileMenu.setMnemonic(KeyEvent.VK_F); //used constructor instead
@@ -202,7 +188,7 @@ System.out.println("is config null? " + (config == null));
 	openMenu.add (menuItem);
 
 	fileMenu.add (openMenu);
-
+	
 	// use provate member for further reference
 	saveMenuItem = new JMenuItem("Save");
 	saveMenuItem.setMnemonic(KeyEvent.VK_S);
@@ -214,7 +200,7 @@ System.out.println("is config null? " + (config == null));
 		}
 	    });
         fileMenu.add(saveMenuItem);
-
+	
 	menuItem = new JMenuItem("Save As...");
 	menuItem.setMnemonic(KeyEvent.VK_A);
 	//        menuItem.setAccelerator(KeyStroke.getKeyStroke(
@@ -244,13 +230,13 @@ System.out.println("is config null? " + (config == null));
 				KeyEvent.VK_P, ActionEvent.CTRL_MASK));
 	menuItem.addActionListener (new ActionListener () {
                 public void actionPerformed (ActionEvent evt) {
-		    //notYetImplemented();
+		    //notYetImplemented();		
 		    Thread runner = new Thread() {
 			    public void run() {
 				fileOp.printData();
 			    }
 			};
-		    runner.start();
+		    runner.start(); 
 		}
 	    });
 	fileMenu.add(menuItem);
@@ -266,9 +252,9 @@ System.out.println("is config null? " + (config == null));
 		    fileOp.createRecentFilesMenu(recentMenu);
 		}
 	    });
-
+	
 	fileMenu.add(recentMenu);
-
+	
 	fileMenu.addSeparator();
 
 	//set up Save Window on Exit
@@ -282,9 +268,9 @@ System.out.println("is config null? " + (config == null));
 	// initialize
 	saveOnExitMenuItem.setSelected(config.getBoolean("SAVEWINDOW"));
 	fileMenu.add(saveOnExitMenuItem);
-
+	
 	fileMenu.addSeparator();
-
+	
         menuItem = new JMenuItem("Exit");
         menuItem.setMnemonic(KeyEvent.VK_X);
         menuItem.setAccelerator(KeyStroke.getKeyStroke
@@ -329,7 +315,7 @@ System.out.println("is config null? " + (config == null));
 
 	// cut
 	menuItem = new JMenuItem("Cut");
-	menuItem.setMnemonic(KeyEvent.VK_T);
+	menuItem.setMnemonic(KeyEvent.VK_T); 
 	menuItem.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_X, ActionEvent.CTRL_MASK));
 	menuItem.addActionListener (new ActionListener () {
@@ -341,7 +327,7 @@ System.out.println("is config null? " + (config == null));
 
 	// copy
 	menuItem = new JMenuItem("Copy");
-        menuItem.setMnemonic(KeyEvent.VK_C);
+        menuItem.setMnemonic(KeyEvent.VK_C); 
 	menuItem.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_C, ActionEvent.CTRL_MASK));
 	menuItem.addActionListener (new ActionListener () {
@@ -353,7 +339,7 @@ System.out.println("is config null? " + (config == null));
 
 	// paste
 	menuItem = new JMenuItem("Paste");
-	menuItem.setMnemonic(KeyEvent.VK_P);
+	menuItem.setMnemonic(KeyEvent.VK_P); 
 	menuItem.setAccelerator(KeyStroke.getKeyStroke
 				(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
 	menuItem.addActionListener (new ActionListener () {
@@ -373,7 +359,7 @@ System.out.println("is config null? " + (config == null));
                 public void actionPerformed (ActionEvent evt) {
 		  editOp.fill();
 		}
-	    });
+	    }); 
 	editMenu.add(menuItem);
 
 	// Clear
@@ -400,7 +386,7 @@ System.out.println("is config null? " + (config == null));
 		}
 	    });
 	editMenu.add(menuItem);
-
+	
 	findNextMenuItem = new JMenuItem("Find Next");
 	findNextMenuItem.setMnemonic(KeyEvent.VK_N);
         findNextMenuItem.setAccelerator(KeyStroke.getKeyStroke
@@ -411,14 +397,14 @@ System.out.println("is config null? " + (config == null));
 		}
 	    });
 	editMenu.add(findNextMenuItem);
-
+	
 	//set up tablemenu
 	tableMenu = new JMenu("Table", true);
 	tableMenu.setMnemonic(KeyEvent.VK_T);
 	//set up tableMenu actions
 	insertMenu = new JMenu("Insert");
 	insertMenu.setMnemonic(KeyEvent.VK_I);
-
+	
 	menuItem = new JMenuItem("Row");
 	menuItem.setMnemonic(KeyEvent.VK_R);
         menuItem.setAccelerator(KeyStroke.getKeyStroke
@@ -429,13 +415,13 @@ System.out.println("is config null? " + (config == null));
 		}
 		});
 	insertMenu.add(menuItem);
-
+	
 	menuItem = new JMenuItem("Column");
 	menuItem.setMnemonic(KeyEvent.VK_C);
 	menuItem.setAccelerator(KeyStroke.getKeyStroke
 				(KeyEvent.VK_INSERT,
 				 ActionEvent.CTRL_MASK|
-				 ActionEvent.SHIFT_MASK));
+				 ActionEvent.SHIFT_MASK));	
 	menuItem.addActionListener (new ActionListener () {
                 public void actionPerformed (ActionEvent evt) {
 		    tableOp.insert(false);
@@ -472,7 +458,7 @@ System.out.println("is config null? " + (config == null));
 	    });
 	deleteMenu.add(menuItem);
 	tableMenu.add(deleteMenu);
-
+	
 	tableMenu.addSeparator();
 	//set up Sort actions
 	sortMenu = new JMenu("Sort");
@@ -495,7 +481,7 @@ System.out.println("is config null? " + (config == null));
 	sortMenu.add(menuItem);
 	tableMenu.add(sortMenu);
 	tableMenu.addSeparator();
-
+	
 	menuItem = new JMenuItem("Set Column Width...");
 	menuItem.setMnemonic(KeyEvent.VK_W);
 	menuItem.addActionListener (new ActionListener () {
@@ -504,7 +490,7 @@ System.out.println("is config null? " + (config == null));
 		}
 	    });
 	tableMenu.add(menuItem);
-
+	
 	//set up Histogram menu
 	chartMenu = new JMenu("Chart", true);
 	chartMenu.setMnemonic(KeyEvent.VK_C);
@@ -514,7 +500,7 @@ System.out.println("is config null? " + (config == null));
 		    checkShowHistogramState();
 		}
 		public void menuDeselected (MenuEvent e) { }
-		public void menuCanceled (MenuEvent e) { }
+		public void menuCanceled (MenuEvent e) { }		
 	    });
 
 
@@ -527,8 +513,8 @@ System.out.println("is config null? " + (config == null));
                 public void actionPerformed (ActionEvent evt) {
 		    histogram.toggle();
 		}
-	    });
-	chartMenu.add(showHistogramMenuItem);
+	    }); 
+	chartMenu.add(showHistogramMenuItem);	
 
 	//set up Add Histogram actions
 	menuItem = new JMenuItem("Histogram...");
@@ -539,7 +525,7 @@ System.out.println("is config null? " + (config == null));
                 public void actionPerformed (ActionEvent evt) {
 		    histogram.addHistogram();
 		}
-	    });
+	    }); 
 
 	chartMenu.add(menuItem);
 	tableMenu.add(chartMenu);
@@ -549,7 +535,7 @@ System.out.println("is config null? " + (config == null));
 	helpMenu = new JMenu("Help", true);
 	helpMenu.setMnemonic(KeyEvent.VK_H);
 
-	//set up Help actions
+	//set up Help actions        
 	menuItem = new JMenuItem("Help Topics");
 	menuItem.setMnemonic(KeyEvent.VK_H);
 	menuItem.setAccelerator(KeyStroke.getKeyStroke
@@ -576,24 +562,24 @@ System.out.println("is config null? " + (config == null));
                 public void actionPerformed (ActionEvent evt) {
 		    boolean showFunc = showFunctionsMenuItem.isSelected();
 		    config.setBoolean("TOOLBAR_FUNCTIONS", showFunc);
-		    funcList.setVisible(showFunc);
+		    funcList.setVisible(showFunc);		    
 		    // repaint
 		}
             });
-
+	
 	helpMenu.add(showFunctionsMenuItem);
 
 	helpMenu.addSeparator();
 	menuItem = new JMenuItem("About SharpTools...");
-	menuItem.setMnemonic(KeyEvent.VK_A);
+	menuItem.setMnemonic(KeyEvent.VK_A); 
 	menuItem.addActionListener (new ActionListener () {
                 public void actionPerformed (ActionEvent evt) {
 		    HelpOp.showAboutBox(SharpTools.this);
 		    table.requestFocus();
 		}
             });
-	helpMenu.add(menuItem);
-
+	helpMenu.add(menuItem); 
+	
         // set up menu bar and menus
         menuBar = new JMenuBar();
 
@@ -602,7 +588,7 @@ System.out.println("is config null? " + (config == null));
         menuBar.add(tableMenu);
 	menuBar.add(chartMenu);
         menuBar.add(helpMenu);
-
+        
         // button initializations
         JButton newButton = new JButton(newIcon);
 	newButton.setToolTipText("New");
@@ -630,8 +616,8 @@ System.out.println("is config null? " + (config == null));
 		    table.requestFocus();
 		}
 	    });
-
-	// we save this button as private member for further reference
+	
+	// we save this button as private member for further reference	
         passwordButton = new JButton(unlockedIcon);
 	passwordButton.setToolTipText("Set Password");
 	passwordButton.addActionListener (new ActionListener () {
@@ -672,7 +658,7 @@ System.out.println("is config null? " + (config == null));
 		    table.requestFocus();
 		}
 	    });
-
+	
         JButton cutButton = new JButton(cutIcon);
 	cutButton.setToolTipText("Cut");
 	cutButton.addActionListener (new ActionListener () {
@@ -689,7 +675,7 @@ System.out.println("is config null? " + (config == null));
 		    table.requestFocus();
 		}
 	    });
-
+	
         JButton pasteButton = new JButton(pasteIcon);
 	pasteButton.setToolTipText("Paste");
         pasteButton.addActionListener (new ActionListener () {
@@ -761,7 +747,7 @@ System.out.println("is config null? " + (config == null));
 		    table.requestFocus();
 		}
 	    });
-
+	
 	JButton helpButton = new JButton(helpIcon);
 	helpButton.setToolTipText("Help");
 	helpButton.addActionListener (new ActionListener () {
@@ -800,7 +786,7 @@ System.out.println("is config null? " + (config == null));
 
 	if (config.getBoolean("TOOLBAR_PASSWORD"))
 	    toolBar.add(passwordButton);
-
+	
 	if (config.getBoolean("TOOLBAR_PRINT"))
 	    toolBar.add(printButton);
 
@@ -840,7 +826,7 @@ System.out.println("is config null? " + (config == null));
 
 	if (config.getBoolean("TOOLBAR_SORTCOLUMN"))
 	    toolBar.add(sortButton);
-
+	
         toolBar.addSeparator();
 
 	if (config.getBoolean("TOOLBAR_HISTOGRAM")) {
@@ -853,16 +839,16 @@ System.out.println("is config null? " + (config == null));
 
         toolBar.addSeparator();
 	toolBar.add(funcList);
-
+	    
 	funcList.setVisible(config.getBoolean("TOOLBAR_FUNCTIONS"));
 
 	newTableModel(config.getInt("ROWS"),
 		      config.getInt("COLUMNS"));
-
+	
 	// set window pos and size
 	int w = config.getInt("WIDTH");
-	int h = config.getInt("HEIGHT");
-
+	int h = config.getInt("HEIGHT");	
+	
 	if (w >= 0 && h >= 0)
 	    table.setPreferredScrollableViewportSize(new Dimension(w, h));
 
@@ -871,7 +857,7 @@ System.out.println("is config null? " + (config == null));
 
 	// clobber resizing of all columns
 	table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
+        
         // set table editor and renderer to custom ones
 	table.setDefaultRenderer(Cell.class, new SharpCellRenderer());
         table.setDefaultEditor(Cell.class, new SharpCellEditor(
@@ -884,7 +870,7 @@ System.out.println("is config null? " + (config == null));
 	// we don't allow reordering
         table.getTableHeader().setReorderingAllowed(false);
 	table.getTableHeader().addMouseListener(new HeaderMouseAdapter());
-
+	
 	// create selection models
 	rowSelectionModel = table.getSelectionModel();
         columnSelectionModel = table.getColumnModel().getSelectionModel();
@@ -892,23 +878,23 @@ System.out.println("is config null? " + (config == null));
 	// add selection listeners to the selection models
 	rowSelectionModel.addListSelectionListener(this);
 	columnSelectionModel.addListSelectionListener(this);
-
+	
 	// set menu bar
 	setJMenuBar(menuBar);
-	container.add(toolBar, BorderLayout.NORTH);
-
+	container.add(toolBar, BorderLayout.NORTH);	
+	
 	scrollPane = new JScrollPane(table,
 				     JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				     JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-
+	
         container.add(scrollPane, BorderLayout.CENTER);
-
+        
         // add window exit listener
         addWindowListener (new WindowAdapter () {
-		public void windowOpened (WindowEvent evt) {
+		public void windowOpened (WindowEvent evt) {		    
 		    table.requestFocus();
 		}
-
+		
 		public void windowClosing (WindowEvent evt) {
 		    exit();
 		}
@@ -916,12 +902,12 @@ System.out.println("is config null? " + (config == null));
 
 	// initial selection
 	resetSelection();
-
+	
 	table.setRequestFocusEnabled(true);
 	menuBar.setRequestFocusEnabled(false);
 	toolBar.setRequestFocusEnabled(false);
-	table.requestFocus();
-
+	table.requestFocus();	
+	
 	pack();
 	show();
     }
@@ -935,8 +921,8 @@ System.out.println("is config null? " + (config == null));
 		column.setPreferredWidth(colWidth);
 	    }
     }
-
-    /**
+    
+    /** 
      * Creates new blank SharpTableModel object with specified number of
      * rows and columns.  table is set to this table model to update screen.
      *
@@ -948,12 +934,12 @@ System.out.println("is config null? " + (config == null));
 	table.setModel(tableModel);
 
 	setBaseColumnWidth();
-
+	
 	setColumnWidth(config.getInt("COLUMNWIDTH"));
 
 	// update history with new one
 	history = new History(this);
-	tableModel.setHistory(history);
+	tableModel.setHistory(history);	
 
 	// inform tableModel that it's unmodified now
 	tableModel.setPasswordModified(false);
@@ -961,7 +947,7 @@ System.out.println("is config null? " + (config == null));
 
 	// init op objects
 	// we shouldn't init fileOp!
-
+	
 	if (editOp == null)
 	    editOp = new EditOp(this);
 	else
@@ -975,17 +961,17 @@ System.out.println("is config null? " + (config == null));
 	histogram = new Histogram(this, "Histograms",
 				  config.getInt("HISTOGRAMWIDTH"),
 				  config.getInt("HISTOGRAMHEIGHT"));
-
+	
 	tableModel.setModified(false);
-
+	
 	resetSelection();
-
+	
 	// menubar/toolbar initial status
 	checkUndoRedoState();
-
+	
 	table.requestFocus();
     }
-
+    
     /**
      * a function to display warning messages
      *
@@ -1011,7 +997,7 @@ System.out.println("is config null? " + (config == null));
     /** Exit the Application */
     public void exit() {
 	if (fileOp.closeFile()) {
-
+	
 	    // save window position and size
 	    if (config.getBoolean("SAVEWINDOW")) {
 		config.setInt("X", getX());
@@ -1020,27 +1006,12 @@ System.out.println("is config null? " + (config == null));
 		config.setInt("WIDTH", (int)dim.getWidth());
 		config.setInt("HEIGHT", (int)dim.getHeight());
 	    }
-
-	    config.save();
-
-            // we don't want to kill the browser if applet is used
-            if (isApplet) this.dispose();
-	    else System.exit(0);
+	    
+	    config.save();	    
+	    System.exit(0);
 	}
     }
-
-
-    /**
-     * Sets isApplet parameter to the given value. This is invoked via
-     * reflection from the applet that creates this object.
-     *
-     * @param boolean - value to set isApplet to
-     */
-     public void setIsApplet(boolean val) {
-      isApplet = val;
-     }
-
-
+    
     /**
      * Directly open a file with specified name - used only in main
      *
@@ -1053,7 +1024,7 @@ System.out.println("is config null? " + (config == null));
 
     /**
      * Check menu items and toolbar buttons
-     * Set to appropriate status (disable/enable)
+     * Set to appropriate status (disable/enable)         
      */
 
     /**
@@ -1102,9 +1073,9 @@ System.out.println("is config null? " + (config == null));
      * Check the show histogram menu
      * Enable only when there is at least one histogram defined
      */
-    public void checkShowHistogramState() {
+    public void checkShowHistogramState() {	
 	showHistogramMenuItem.setState(histogram.isVisible());
-	showHistogramMenuItem.setEnabled(histogram.hasChart());
+	showHistogramMenuItem.setEnabled(histogram.hasChart());	
     }
 
     public void setBaseColumnWidth() {
@@ -1118,26 +1089,12 @@ System.out.println("is config null? " + (config == null));
 	    }
 	}
     }
-
-
+    
     /** This is the main method that gets the ball rolling */
-    public static void main(String args[])
-    {
-        SharpTools spreadsheet = new SharpTools();
-        // initialize the function handler table object
-	Formula.registerFunctions();
-        spreadsheet.show();
-	if (args != null && args.length>0)
-	    spreadsheet.openInitFile(args[0]);
-    }
-
-    /**
-     * This method initialized the spreadsheet settings.
-     */
-     public static void initSettings()
-     {
+    public static void main(String args[]){
 	// show splash screen! - cancelled - we start up fast!
 	//	new SplashWindow("logo.jpg", null, 2000);
+	
 	// read configuration file
 	config = new Config("sharptools.ini");
 
@@ -1147,34 +1104,41 @@ System.out.println("is config null? " + (config == null));
 	//	config.set("AUTORESIZE", "TRUE");
 	config.setInt("HISTOGRAMWIDTH", 600);
 	config.setInt("HISTOGRAMHEIGHT", 400);
+
 	// read file
 	config.load();
 
 	// only change it when DEBUG is uncommented in the config file
 	if (config.get("DEBUG") != null)
 	    Debug.setDebug(config.getBoolean("DEBUG"));
+	
+	// initialize the function handler table object
+	Formula.registerFunctions();
+	
+        SharpTools spreadsheet = new SharpTools();
+        spreadsheet.show();
+	if (args.length>0)
+	    spreadsheet.openInitFile(args[0]);
     }
-
 
     // this is a static function to help loading images
     public static ImageIcon getImageIcon(String name) {
 	URL url = ClassLoader.getSystemResource(name);
 	if (url == null) {
-	    System.out.println("image "+name+" not found try reading from jar.");
-	    return fileReader.getImageIconFromJAR(name);
+	    System.out.println("image "+name+" not found");
+	    return null;
 	}
-
 	return new ImageIcon(url);
     }
 
     class HeaderMouseAdapter extends MouseAdapter {
 
 	public void mouseClicked(MouseEvent e) {
-	    TableColumnModel colModel =
+	    TableColumnModel colModel = 
 		table.getColumnModel();
-	    int col =
+	    int col = 
 		colModel.getColumn(colModel.getColumnIndexAtX(e.getX())).getModelIndex();
-
+	    
 	    int rowCount = table.getRowCount();
 	    table.setRowSelectionInterval(baseRow, rowCount - 1);
 
@@ -1188,24 +1152,31 @@ System.out.println("is config null? " + (config == null));
     // the ListSelectionListener interface
     public void valueChanged(ListSelectionEvent e) {
 	table.requestFocus();
-
+	    
 	// Ignore extra messages
 	if (e.getValueIsAdjusting()) return;
-
+	
 	// Get event source
 	ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-
+	
 	if (lsm.isSelectionEmpty()) {
 	    // always set selection
 	    table.setRowSelectionInterval(baseRow, baseRow);
 	    table.setColumnSelectionInterval(baseCol, baseCol);
 	} else {
 	    // Get selected column
+            /*
 	    if (table.getSelectedColumn() < baseCol) {
 		int columnCount = table.getColumnCount();
-		table.setColumnSelectionInterval(baseCol, columnCount - 1);
-		table.removeColumnSelectionInterval(baseRow,baseRow);
-	    }
+                if (columnCount > baseCol) {
+                    Debug.println("setColumnSelectionInterval "
+                                  + String.valueOf(baseCol)
+                                  + " " + String.valueOf(columnCount - 1));
+                              
+                    table.setColumnSelectionInterval(baseCol, columnCount - 1);
+                    table.removeColumnSelectionInterval(baseRow,baseRow);
+                }
+                }*/
 	}
     }
 

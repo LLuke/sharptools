@@ -1,12 +1,10 @@
 /*
  * @(#)Formula.java
- *
- * $Id: Formula.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
- *
+ * 
+ * $Id: Formula.java,v 1.72 2001/05/27 03:13:04 huaz Exp $
+ * 
  * Created October 18, 2000, 3:27 PM
  */
-package sharptools;
-
 import javax.swing.*;
 import java.util.*;
 import java.io.*;
@@ -23,11 +21,11 @@ import java.io.*;
  * </ol>
  *
  * @see Node
- * @see Function
+ * @see Function 
  * @see ParserException
  *
  * @author Hua Zhong <huaz@cs.columbia.edu>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.72 $
  */
 
 public class Formula {
@@ -45,7 +43,7 @@ public class Formula {
 
     // whether this formula needs recalculation
     private boolean needsRecalc;
-
+    
     /**
      * Formula contructor.
      *
@@ -63,12 +61,12 @@ public class Formula {
 	this.row = row;
 	error = e;
     }
-
+    
     /**
      * Formula contructor.
      *
      * Parse the input string and translate into postfix form.
-     *
+     * 
      * @param input the formula string
      * @param row the current row where the formula is stored
      * @param col the current column where the forluma is stored
@@ -100,7 +98,7 @@ public class Formula {
      * This is used for copy/paste.  Take a formula and put it into a
      * new position, and convert the formula string to make relative
      * addresses correct.
-     *
+     * 
      * @param formula the original formula
      * @param row the current(new) row
      * @param col the current(old) column
@@ -138,7 +136,7 @@ public class Formula {
      * A paste is not safe when at the new location relative addresses
      * become invalid (e.g., can not use uppercase letters to represent
      * the column number, or row number is non-positive).
-     *
+     * 
      * @param formula the original formula
      * @param rowOff the row offset
      * @param colOff the column offset
@@ -155,7 +153,7 @@ public class Formula {
 
     /**
      * Check for bad formula.
-     *
+     * 
      * @return boolean true if postfix
      */
     public boolean isBad() {
@@ -166,16 +164,16 @@ public class Formula {
 
     /**
      * Check whether needs a recalc
-     *
+     * 
      * @return boolean true if needs recalculation
      */
     public boolean needsRecalc() {
 	return needsRecalc;
     }
-
+    
    /**
      * Mark it as needsRecalc
-     *
+     * 
      * @parem boolean true if needs recalculation
      */
     public void setNeedsRecalc(boolean needs) {
@@ -204,7 +202,7 @@ public class Formula {
 	int lastPos = 0;
 
 	//	System.out.println("old formula: "+oldFormula);
-
+	
 	for (int i = 0; i < oldFormula.length(); i++) {
 	    char c = oldFormula.charAt(i);
 	    int letterStart = i;
@@ -219,10 +217,10 @@ public class Formula {
 		}
 
 		String colName = colNameBuf.toString();
-
+		
 		if (i == oldFormula.length())
 		    break;
-
+		
 		// is it followed by digits?
 		if (!isAbsAddr &&
 		    Character.isDigit(oldFormula.charAt(i))) {
@@ -234,7 +232,7 @@ public class Formula {
 		    }
 
 		    String rowName = rowNameBuf.toString();
-
+		    
 		    // We've got colName and rowName
 		    // add the string before the rel_addr first
 		    newFormulaBuf.append(oldFormula.substring(lastPos,
@@ -247,7 +245,7 @@ public class Formula {
 						     colOffset);
 			if (col == null)
 			    return null;
-
+			
 			newFormulaBuf.append(col);
 		    }
 
@@ -258,10 +256,10 @@ public class Formula {
 						  rowOffset);
 			if (row == null)
 			    return null;
-
+			
 			newFormulaBuf.append(row);
 		    }
-
+		    
 		    lastPos = i;
 		}
 	    }
@@ -271,8 +269,8 @@ public class Formula {
 	//	System.out.println("new formula: "+newFormula);
 	return newFormulaBuf.toString();
     }
-
-
+	
+    
     /**
      * Tokenize the formula string into a list of Nodes.
      *
@@ -294,10 +292,10 @@ public class Formula {
 	Node lastToken = null;
 	//	boolean hasRange = false; // has a pending address range
 	int nParen = 0; // balance of parens
-
+		
 	while (cur < input.length()) {
 	    Node node = new Node();
-
+	    
 	    try {
 		char c = input.charAt(cur++);
 		node.setData(String.valueOf(c));
@@ -309,18 +307,18 @@ public class Formula {
 		    // get all preceding letters
 		    while (cur < input.length() &&
 			   Character.isLetter(input.charAt(cur)))
-			node.appendData(input.charAt(cur++));
-
+			node.appendData(input.charAt(cur++)); 
+		
 		    if (Character.isDigit(input.charAt(cur))) {
 			node.setType(Node.REL_ADDR);
 			// {letters}{numbers} is a relative address
 			node.setCol(translateColumn(node.getData()) - col);
-
+			
 			node.setData("");
-
+			    
 			while (cur < input.length() &&
 			       Character.isDigit(input.charAt(cur)))
-			    node.appendData(input.charAt(cur++));
+			    node.appendData(input.charAt(cur++));    
 			// relative row
 			node.setRow(translateRow(node.getData()) - row);
 			node.setData(null);
@@ -362,7 +360,7 @@ public class Formula {
 
 		    node.setPending(true);
 		    node.setType(Node.COLON);
-
+		    
 		    Node prev = null;
 
 		    try {
@@ -379,7 +377,7 @@ public class Formula {
 		    else
 			// invalid address format
 			throwError("#ADDR?");
-
+		    
 		}else if (c == '+' || c == '-' || c == '*' || c == '/' ||
 			 c == '^' || c == '%') {
 		    node.setType(Node.OPERATOR);
@@ -464,11 +462,11 @@ public class Formula {
 		     lastToken.isType(Node.COMMA))) {
 		    tokens.add(zero);
 		}
-
+		
 		tokens.add(node);
 		lastType = node.getType();
-		lastToken = node;
-
+		lastToken = node;		
+		    
 	    }catch (IndexOutOfBoundsException e) {
 		// error
 		throwError("#NAME?");
@@ -478,7 +476,7 @@ public class Formula {
 	    catch (Exception e) {
 		Debug.println(e.toString());
 	    }
-
+		
 
 	}
 
@@ -517,7 +515,7 @@ public class Formula {
      */
     private LinkedList convertParams(final LinkedList tokens)
 	throws ParserException {
-
+	
 	if (tokens == null) {
 	    throw error;
 	}
@@ -537,11 +535,11 @@ public class Formula {
 		    // should be LParen
 		    if (!node.isType(Node.LPAREN)) // ( expected
 			throwError("#NO(?");
-		}
+		}		
 		else if (node.isType(Node.LPAREN)) {
 		    node.setPending(true);
 		    stack.add(node);
-		}
+		}		
 		else if (node.isType(Node.COMMA)) {
 		    Node exp = new Node();
 		    LinkedList list = new LinkedList();
@@ -581,7 +579,7 @@ public class Formula {
 			// this is a normal left paren
 			param.setPending(false);
 			// push back
-			stack.add(param);
+			stack.add(param);			
 			stack.addAll(list);
 			stack.add(node);
 		    }
@@ -599,9 +597,9 @@ public class Formula {
 		}
 		else
 		    stack.add(node); //push(node);
-
+		    
 	    }
-
+		
 	}
 	catch (ParserException e) {
 	    throw e;
@@ -614,7 +612,7 @@ public class Formula {
 
 	return stack;
     }
-
+    
     /**
      * This converts tokens to postfix format using stack.
      * <p>
@@ -627,7 +625,7 @@ public class Formula {
      * <li>For ')', pop all the previous operators until a (</li>
      * <li>If we reach the end, pop up everything</li>
      * </ol>
-     *
+     * 
      * @param tokens a linked list to convert
      * @exception ParserException
      *
@@ -655,7 +653,7 @@ public class Formula {
 		// just add normal values to the list
 		postfix.add(node);
 		break;
-
+		
 	    case Node.LPAREN:
 		// push to stack; pop out when a RPAREN is encountered
 		stack.push(node);
@@ -672,7 +670,7 @@ public class Formula {
 		    postfix.add((Node)stack.pop());
 		}
 		stack.push(node);
-		break;
+		break;		
 	    case Node.RPAREN:
 		try {
 		    Node op = (Node)stack.pop();
@@ -700,13 +698,13 @@ public class Formula {
 		}
 
 		postfix.add(node);
-
+		
 		break;
-
+		
 	    default:
 		// unknown error - should not happen
 		throwError("#ERROR?");
-	    }
+	    }	
 	}
 
 	// pop up the rest nodes
@@ -715,7 +713,7 @@ public class Formula {
 
 	return postfix;
     }
-
+    
     /**
      * From a list of tokens generate a set of cells that this cell depends on.
      *
@@ -727,7 +725,7 @@ public class Formula {
      */
     private TreeSet createDependency(LinkedList tokens) {
 	TreeSet dependency = new TreeSet();
-
+	
 	Iterator it = tokens.iterator();
  	while (it.hasNext()) {
 	    Node node = (Node)it.next();
@@ -746,7 +744,7 @@ public class Formula {
 	}
 	return dependency;
     }
-
+    
     /**
      * From the Node list; Creates the dependency set.
      *
@@ -828,7 +826,7 @@ public class Formula {
 
     /**
      * This evaluates the function.
-     *
+     * 
      * @param table the TableModel object
      * @param node the head node of the function
      * @return the value as a Float object
@@ -846,12 +844,12 @@ public class Formula {
 	if (func == null) {
 	    // not registered function
 	    throw new ParserException("#FUNC?");
-
+	    
 	}else
 	    return func.evaluate(table, node, row, col);
-
+	    
     }
-
+    
     /**
      * Evaluates the cell (row, col) of table.
      *
@@ -867,17 +865,17 @@ public class Formula {
 	if (Debug.isDebug())
 	    Debug.println("recalculating "+new CellPoint(row, col));
 
-
+	
 	// get the formula object
-
+	
 	Formula formula = table.getCellAt(row, col).getFormula();
 	formula.setNeedsRecalc(false);
-
-	if (formula == null)
-	    return new Integer(0);
+	
+	if (formula == null)	    
+	    return new Integer(0);	    
 	else
 	    return formula.evaluate(table);
-
+	
     }
 
     /**
@@ -897,7 +895,7 @@ public class Formula {
 
 	return evaluate(table, postfix, row, col);
     }
-
+    
    /**
     * It evaluates the postfix expression by a stack.
     *
@@ -915,7 +913,7 @@ public class Formula {
 	try {
 	    Stack stack = new Stack();
 	    Iterator it = postfix.iterator();
-
+	
 	    while (it.hasNext()) {
 		Node node = (Node)it.next();
 		//Number result;
@@ -943,7 +941,7 @@ public class Formula {
 			table.getNumericValueAt(node.getRow(), node.getCol());
 		    break;
 		case Node.REL_ADDR:
-		    // get the numeric value of that cell
+		    // get the numeric value of that cell		    
 		    result = //getNumericValueAt(table, node.getRow()+row,
 				//	       node.getCol()+col);
 			table.getNumericValueAt(node.getRow()+row,
@@ -957,7 +955,7 @@ public class Formula {
 		// push to the stack
 		stack.push(result);
 	    }
-
+	    
 	    Number result = (Number)stack.pop();
 
 	    return result;
@@ -973,13 +971,13 @@ public class Formula {
 
 	return new Integer(0);
     }
-
+    
     // The following are just simple functions
-
+    
     /**
      * This translates the string form of row into row number ('12' -> 12),
      * and vice versa.
-     *
+     * 
      * @param row the string representation of the row
      * @return the int representation of the row
      */
@@ -989,7 +987,7 @@ public class Formula {
 
     /**
      * This translates the int form of row into row string (12 -> '12').
-     *
+     * 
      * @param row the int representation of the row
      * @return the string representation of the row
      */
@@ -999,20 +997,20 @@ public class Formula {
 
    /**
     * This translates the int form of column into column string (1 -> 'A')
-    *
+    * 
     * @param column the int representation of the column
     * @return the string represetnation of the column
-    */
+    */	
     final private static int translateColumn(String column) {
 	return Node.translateColumn(column);
     }
 
    /**
     * This translates the string form of column into column number ('A' -> 1)
-    *
+    * 
     * @param column the string representation of the column
     * @return the int represetnation of the column
-    */
+    */	
     final private static String translateColumn(int column) {
 	return Node.translateColumn(column);
     }
@@ -1021,7 +1019,7 @@ public class Formula {
      * Label the bad cells and throw ParserException.
      * error is saved so next time it won't re-evaluate again:
      * it directly throws the same exception.
-     *
+     * 
      * @param s the thing that's bad
      * @exception ParserException
      */
@@ -1045,7 +1043,7 @@ public class Formula {
     private String getCellString() {
 	return getCellString(row, col);
     }
-
+    
     /**
      * Gets the string form of the cell address ("A1", "B2", etc).
      *
@@ -1060,16 +1058,16 @@ public class Formula {
     final static public CellPoint parseAddress(String s) {
 
 	try {
-
+	
 	    int row, col;
 
 	    s = s.toUpperCase();
 	    int len = 0;
 	    int total = s.length();
-
+	    
 	    StringBuffer buf = new StringBuffer();
 	    char c;
-
+	    
 	    while (len < total) {
 		c = s.charAt(len);
 		if (Character.isUpperCase(c)) {
@@ -1079,16 +1077,16 @@ public class Formula {
 		else if (Character.isDigit(c))
 		    break;
 		else
-		    return null;
+		    return null;		
 	    }
-
+	    
 	    col = translateColumn(buf.toString());
-
+	    
 	    if (col == 0)
 		return null;
-
+	    
 	    buf = new StringBuffer();
-
+	    
 	    while (len < total) {
 		c = s.charAt(len);
 		if (Character.isDigit(c)) {
@@ -1098,13 +1096,13 @@ public class Formula {
 		else
 		    return null;
 	    }
-
+	    
 	    row = translateRow(buf.toString());
 	    if (row == 0)
 		return null;
-
+	    
 	    return new CellPoint(row, col);
-
+	    
 	}
 	catch (Exception e) {
 	    return null;
@@ -1121,7 +1119,7 @@ public class Formula {
     static private void register(String funcName, Function func) {
 	funcTable.put(funcName, func);
     }
-
+    
     /**
      * Registers the functions on the funcTable.
      * Should be called only once.
@@ -1148,7 +1146,7 @@ public class Formula {
 	register("RANGE", new FunctionRange());
 	register("STDDEV", new FunctionStddev());
 	register("MEANDEV", new FunctionMeandev());
-	register("COUNT", new FunctionCount());
+	register("COUNT", new FunctionCount());	
 	register("PI", new FunctionPI());
 	register("E", new FunctionE());
     }

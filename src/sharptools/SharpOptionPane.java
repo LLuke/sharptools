@@ -1,15 +1,13 @@
-/**
+/** 
  * This class provides dialogs that can display a message or receive input
  * to the user. It has customized Buttons.
  *
  * The class is used to replace JOptionPane.
- *
+ * 
  * @author Hua Zhong
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.9 $
  *
  */
-package sharptools;
-
 import javax.swing.*;
 import javax.swing.table.*;
 import javax.swing.border.*;
@@ -68,13 +66,13 @@ public class SharpOptionPane {
 	catch (Exception e) {
 
 	}
-
+	
 	return null;
     }
-
+    
     /**
      * This is used by showInputDialog and showIntegerInputDialog
-     *
+     * 
      * @param parentComponent the parent Component for the dialog
      * @param message the Object to display
      * @param title the String to display in the dialog title bar
@@ -116,16 +114,16 @@ public class SharpOptionPane {
 		box.setSelectedIndex(0);
 
 	    com = box;
-
+	
 	}
 
 	if (message instanceof Component)
 	    panel.add((Component)message, BorderLayout.NORTH);
 	else
 	    panel.add(new Label(message.toString()), BorderLayout.NORTH);
-
+	
 	panel.add(com, BorderLayout.CENTER);
-
+	
 	choice = showOptionDialog(parentComponent, panel, title,
 				  JOptionPane.OK_CANCEL_OPTION,
 				  messageType, icon);
@@ -139,7 +137,7 @@ public class SharpOptionPane {
 	else
 	    return null;
     }
-
+          
     /**
      * @param parentComponent the parent component
      * @param message the message to be displayed
@@ -148,7 +146,7 @@ public class SharpOptionPane {
 					 Object message) {
 	showMessageDialog(parentComponent, message, null, 0, null);
     }
-
+    
     /**
      * @param parentComponent the parent component
      * @param message the message to be displayed
@@ -162,7 +160,7 @@ public class SharpOptionPane {
 					 int messageType) {
 	showMessageDialog(parentComponent, message, title, messageType, null);
     }
-
+    
     /**
      * @param parentComponent the parent component
      * @param message the message to be displayed
@@ -174,11 +172,11 @@ public class SharpOptionPane {
 					 Object message,
 					 String title,
 					 int messageType,
-					 Icon icon) {
+					 Icon icon) {	
 	showOptionDialog(parentComponent, message, title,
 			 JOptionPane.DEFAULT_OPTION,
 			 messageType, icon, 0);
-    }
+    }      
 
     /**
      * @param parentComponent the parent component
@@ -198,10 +196,10 @@ public class SharpOptionPane {
 	return showOptionDialog(parentComponent, message, title, optionType,
 				messageType, icon, 0);
     }
-
+    
     /**
      * Note the interface is different from JOptionPane.showOptionDialog()
-     *
+     * 
      * @param parentComponent the parent component
      * @param message the message to be displayed
      * @param title dialog title
@@ -216,7 +214,7 @@ public class SharpOptionPane {
 				       String title,
 				       int optionType,
 				       int messageType,
-				       Icon icon,
+				       Icon icon,			       
 				       int defaultIndex) {
 
 	SharpDialog dialog;
@@ -225,14 +223,14 @@ public class SharpOptionPane {
 	    dialog = new SharpDialog((Frame)parentComponent, title, true);
 	else
 	    dialog = new SharpDialog((Dialog)parentComponent, title, true);
-
+	    
 	dialog.setOptionPane(message, messageType,
 			     optionType, icon,
 			     defaultIndex);
-
+	
 	dialog.show();
 	return dialog.getChoice();
     }
-
-}
+    
+}    
 

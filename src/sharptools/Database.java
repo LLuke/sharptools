@@ -1,7 +1,7 @@
 /*
  * @ (#)Database.java
  *
- * $Id: Database.java,v 1.2 2001/11/16 17:51:11 oleglebedev Exp $
+ * $Id: Database.java,v 1.5 2001/05/27 22:29:10 huaz Exp $
  *
  * Created on May 19, 2001, 09:10:28 PM
  *
@@ -25,7 +25,6 @@
  * teach SharpTableModel how to create itself from a ResultSet too.
  *
  */
-package sharptools;
 
 import javax.swing.*;
 import java.util.*;
@@ -40,7 +39,7 @@ import javax.swing.*;
  * This contains database operations on the spreadsheet table
  *
  * @author  Shiraz Kanga
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.5 $
  */
 public class Database
 {
@@ -64,7 +63,7 @@ public class Database
 	table = sharp.getTable ();
 	tableModel = sharp.getTableModel ();
     }
-
+    
     public void connectDb ()
     {
 	String dbUsername = null;
@@ -73,60 +72,60 @@ public class Database
 	String dbDriver = null;
 	String dbTable = null;
 	String connectName = null;
-
+	
 	boolean lockTable;
 	boolean verifySave;
 	boolean newConnection = false;
-
+	
 	StringBuffer textBuf = new StringBuffer ();
-
+	
 	ConnectDialog connectDialog = new ConnectDialog (sharp);
 	connectDialog.setVisible (true);
 	if (connectDialog.isCancelled())
 	    return;
-
+	
 	Connection dbConnection = connectDialog.getConnection();
 	/*
 	  connectName = connectDialog.getConnectName ();
-
+	  
 	  dbUsername = connectDialog.getDbUsername ();
 	  dbPassword = connectDialog.getDbPassword ();
 	  dbUrl = connectDialog.getDbUrl ();
-	  dbDriver = connectDialog.getDbDriver ();
+	  dbDriver = connectDialog.getDbDriver ();  
 	*/
-
+	
 	try {
 	    DatabaseMetaData dma = dbConnection.getMetaData ();
-
+		
 	    SharpOptionPane.showMessageDialog (sharp, "Connected to database " + dma.getDatabaseProductName () + " v" + dma.getDatabaseProductVersion () + "\nusing driver " + dma.getDriverName () + " v" + dma.getDriverVersion (),
 					       "Connected", JOptionPane.INFORMATION_MESSAGE, connectedIcon);
-
+	    
 	    if ((dbTable == null) || dbTable.equals (""))
 		dbTable = selectDbTable (dma);
 
 	    // need to check cancel - huaz
 	    if (dbTable == null)
 		return;
-
+	    
 	    Statement stmt = dbConnection.createStatement ();
 	    ResultSet dbResults = stmt.executeQuery ("SELECT * FROM " + dbTable);
-
+	    
 	    String warnings = checkForWarning (dbConnection.getWarnings ());
 	    if ((warnings!=null) && !warnings.equals (""))
 		SharpOptionPane.showMessageDialog (sharp, warnings,
 						   "Warning", JOptionPane.INFORMATION_MESSAGE, connectedIcon);
-
+	    
 	    // metadata can supply information about the schema
 	    ResultSetMetaData rsmd = dbResults.getMetaData ();
 	    int numCols = rsmd.getColumnCount ();
-
+	    
 	    // first print header labels from meta-data
 	    for (int i=1; i<=numCols; i++) {
 		if (i != 1) textBuf.append ("\t");
 		textBuf.append (rsmd.getColumnLabel (i));
 	    }
 	    textBuf.append ("\n");
-
+	    
 	    while (dbResults.next ()) {
 		// for one row
 		for (int j=1; j<=numCols; j++) {
@@ -135,22 +134,22 @@ public class Database
 		}
 		textBuf.append ("\n");
 	    }
-
+	    
 	    String text = textBuf.toString ();
 	    // create new table model
 	    CellPoint size = SharpTableModel.getSize (text);
 	    //      System.out.println (size);
 	    sharp.newTableModel (size.getRow (), size.getCol ());
 	    tableModel = sharp.getTableModel ();
-	    tableModel.fromString (text, 0, 0, new CellRange (0, size.getRow (), 1, size.getCol ()));
-
+	    tableModel.fromString (text, 0, 0, new CellRange (1, size.getRow (), 1, size.getCol ()));
+	    
 	    // tableModel.setModified (false);
 	    // set new title for spreadsheet
 	    sharp.setTitle (dbTable + " - Sharp Tools Spreadsheet");
-
+	    
 	    // update recent files
-	    //addRecentFile (dbTable);
-
+	    //addRecentFile (dbTable);	    
+	    
 	    dbResults.close ();
 	    stmt.close ();
 	}
@@ -167,7 +166,7 @@ public class Database
     private String checkForWarning (SQLWarning warn)
 	throws SQLException {
 	StringBuffer textBuf = new StringBuffer ();
-
+	
 	if (warn != null) {
 	    textBuf.append ("Warning:\n\n");
 	    while (warn != null) {
@@ -179,7 +178,7 @@ public class Database
 	}
 	return textBuf.toString ();
     }
-
+    
     private String selectDbTable (DatabaseMetaData dma)
 	throws SQLException {
 	// JDBC exposes must meta data as ResultSets
@@ -187,7 +186,7 @@ public class Database
 	// about a particular schema in the database
 	ResultSet dbResults = dma.getTables (null, null, "%", null);
 	Vector vec = new Vector ();
-
+	
 	/*
 	  Each table description row has the following columns:
 	  TABLE_CAT String => table catalog (may be null)
@@ -198,7 +197,7 @@ public class Database
 	  REMARKS String => explanatory comment on the table
 	  We are only want column 3 (table name)
 	*/
-
+	
 	while (dbResults.next ())
 	    vec.addElement (dbResults.getString (3));
 
@@ -208,8 +207,8 @@ public class Database
 					      "Empty Database",
 					      JOptionPane.WARNING_MESSAGE);
 	    return null;
-	}
-
+	}   
+	
 	Object[] possibleValues = new Object[vec.size ()];
 	vec.copyInto (possibleValues);
 	Object selectedValue = SharpOptionPane.showInputDialog(sharp,

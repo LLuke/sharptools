@@ -1,12 +1,10 @@
 /*
  * @(#)HistoDialog.java
- *
- * $Id: HistoDialog.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
- *
+ * 
+ * $Id: HistoDialog.java,v 1.6 2001/05/27 22:28:57 huaz Exp $
+ * 
  * Created Novenmber 23, 2000, 2:55 PM
  */
-package sharptools;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -15,7 +13,7 @@ import javax.swing.*;
  * This is used to provide options configuration for a histogram
  *
  * @author Hua Zhong
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.6 $
  */
 
 public final class HistoDialog extends SharpDialog {
@@ -72,12 +70,12 @@ public final class HistoDialog extends SharpDialog {
 	yMin.setToolTipText("Minumum value on Y axis");
 	yMax.setToolTipText("Maximum value on Y axis");
 	yUnit.setToolTipText("Unit on Y axis");
-
+	
 	/*
 	 * All the following crap is laying out the component.
 	 * Nothing interesting.
 	 */
-
+	
 	JPanel east = new JPanel();///new GridLayout(0, 1, 5, 5));
 	east.setLayout(new BoxLayout(east, BoxLayout.Y_AXIS));
 	east.setBorder(BorderFactory.createEmptyBorder(10,10,20,10));
@@ -89,7 +87,7 @@ public final class HistoDialog extends SharpDialog {
 	label.setDisplayedMnemonic(KeyEvent.VK_T);
 	textPanel.add(label);
 	textPanel.add(title);
-
+	
 	east.add(textPanel);
 
 	// separator
@@ -97,10 +95,10 @@ public final class HistoDialog extends SharpDialog {
 	textPanel.add(new JSeparator());
 	//	textPanel.setBorder(BorderFactory.createEtchedBorder());
 	east.add(textPanel);
-
+	
 	// Cell Range
 	textPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
+	
 	label = new JLabel("Cell Range: ");
 	label.setLabelFor(startCell);
 	label.setDisplayedMnemonic(KeyEvent.VK_C);
@@ -136,7 +134,7 @@ public final class HistoDialog extends SharpDialog {
 	label.setDisplayedMnemonic(KeyEvent.VK_B);
 	textPanel.add(label);
 	textPanel.add(bucket);
-
+	
 	east.add(textPanel);
 
 	// separator
@@ -144,10 +142,10 @@ public final class HistoDialog extends SharpDialog {
 	textPanel.add(new JSeparator());
 	//	textPanel.setBorder(BorderFactory.createEtchedBorder());
 	east.add(textPanel);
-
+	
 	// X Scale
 	textPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
+	
 
 	label = new JLabel("X Scale: ");
 	label.setLabelFor(xMin);
@@ -189,7 +187,7 @@ public final class HistoDialog extends SharpDialog {
 	label.setDisplayedMnemonic(KeyEvent.VK_N);
 	textPanel.add(label);
 	textPanel.add(yUnit);
-
+	
 	east.add(textPanel);
 
 	// separator
@@ -197,7 +195,7 @@ public final class HistoDialog extends SharpDialog {
 	textPanel.add(new JSeparator());
 	east.add(textPanel);
 
-	// Radio buttons
+	// Radio buttons	
 	textPanel = new JPanel();
 	textPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
@@ -206,24 +204,24 @@ public final class HistoDialog extends SharpDialog {
 	percentageButton = new JRadioButton("Percentage");
 	percentageButton.setMnemonic(KeyEvent.VK_P);
 	//	radio.setActionCommand("Count");
-
+	
 	metric.add(percentageButton);
 
 	label = new JLabel("Display Y by ");
 	textPanel.add(label);
-
+	
 	textPanel.add(percentageButton);
 	//	percentageButton.setSelected(true);
 
 	countButton = new JRadioButton("Count");
 	countButton.setMnemonic(KeyEvent.VK_O);
-
+	
 	metric.add(countButton);
 	textPanel.add(countButton);
-
+	
 	east.add(textPanel);
 
-
+	
 	setOptionPane(east,
 		      JOptionPane.PLAIN_MESSAGE,
 		      JOptionPane.OK_CANCEL_OPTION,
@@ -233,8 +231,8 @@ public final class HistoDialog extends SharpDialog {
 	// but choice's default value is CLOSED_OPTION
 	setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-	startCell.requestFocus();
-
+	startCell.requestFocus();	
+	
     }
 
     // strings defined here
@@ -263,16 +261,16 @@ public final class HistoDialog extends SharpDialog {
 
 	if (!addressOK(endCell, "End Cell"))
 	    return false;
-
+	
 	if (!orderOK(startValue, endValue, startvaluestring, endvaluestring))
 	    return false;
-
+	
 	if (!orderOK(xMin, xMax, xminstring, xmaxstring))
 	    return false;
-
+	
 	if (!orderOK(yMin, yMax, yminstring, ymaxstring))
 	    return false;
-
+	
 	if (isNegative(bucket, bucketstring))
 	    return false;
 
@@ -302,7 +300,7 @@ public final class HistoDialog extends SharpDialog {
 	}
 	return false;
     }
-
+    
     /**
      * Make sure first value is lower than the second's and both have valid input
      *
@@ -323,7 +321,7 @@ public final class HistoDialog extends SharpDialog {
 	    start.requestFocus();
 	    return false;
 	}
-
+	
 	Float f2 = end.getNumber();
 
 	if (f2 == null) {
@@ -332,9 +330,9 @@ public final class HistoDialog extends SharpDialog {
 	    end.requestFocus();
 	    return false;
 	}
-
+	
 	if (f1.floatValue() > f2.floatValue()) {
-	    // exchange
+	    // exchange	    
 	    start.setNumber(f2);
 	    end.setNumber(f1);
 	}
@@ -359,7 +357,7 @@ public final class HistoDialog extends SharpDialog {
 	    field.requestFocus();
 	    return false;
 	}
-
+	
 	return true;
     }
 
@@ -409,7 +407,7 @@ public final class HistoDialog extends SharpDialog {
 	    int maxrow = Math.max(point1.getRow(), point2.getRow());
 	    int mincol = Math.min(point1.getCol(), point2.getCol());
 	    int maxcol = Math.max(point1.getCol(), point2.getCol());
-
+	    
 	    return new CellRange(minrow, maxrow, mincol, maxcol);
 	}
     }
@@ -417,13 +415,13 @@ public final class HistoDialog extends SharpDialog {
     // many get/set functions
     public CellPoint getStartCell() { return startCell.getAddress(); }
     public void setStartCell(CellPoint addr) { startCell.setAddress(addr); }
-
-    public CellPoint getEndCell() { return endCell.getAddress(); }
+    
+    public CellPoint getEndCell() { return endCell.getAddress(); }    
     public void setEndCell(CellPoint addr) { endCell.setAddress(addr); }
 
     public Float getStartValue() { return startValue.getNumber(); }
     public void setStartValue(Float f) { startValue.setNumber(f); }
-
+    
     public Float getEndValue() { return endValue.getNumber(); }
     public void setEndValue(Float f) { endValue.setNumber(f); }
 

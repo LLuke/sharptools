@@ -1,11 +1,10 @@
 /*
  * @(#)SharpCellEditor.java
  *
- * $Id: SharpCellEditor.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
+ * $Id: SharpCellEditor.java,v 1.7 2000/12/02 21:44:52 rkc10 Exp $
  *
  * Created on October 27, 2000, 2:19 AM
  */
-package sharptools;
 
 import javax.swing.*;
 
@@ -15,14 +14,14 @@ import javax.swing.*;
  * all methods of the DefaultCellEditor.
  *
  * @author Ricky Chin
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.7 $
  */
 public class SharpCellEditor extends DefaultCellEditor {
 
     /** the JTextField object this editor uses
      */
     private JTextField textField;
-
+    
     /**
      * Creates new SharpCellEditor.
      *
@@ -40,7 +39,7 @@ public class SharpCellEditor extends DefaultCellEditor {
             public void setValue(Object value) {
 		if (value instanceof Cell) {
                     Cell temp = (Cell)value;
-
+                    
                     /* when editing formula cell
                      * a string representation is displayed
                      */
@@ -48,13 +47,13 @@ public class SharpCellEditor extends DefaultCellEditor {
                         textField.setText("=" + temp.getFormula().toString());
                     }
                     else {
-
+                        
                         //otherwise it is just the normal string conversion
                         textField.setText(temp.getValue().toString());
                     }
                 }
                 else {
-
+                    
                     //empty cells display nothing
                     textField.setText((value == null) ? "" : value.toString());
                 }

@@ -1,11 +1,10 @@
 /*
  * @(#)TabPanel.java
- *
- * $Id: TabPanel.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
- *
+ * 
+ * $Id: TabPanel.java,v 1.5 2001/05/27 22:29:49 huaz Exp $
+ * 
  * Created Novenmber 27, 2000, 11:27 PM
  */
-package sharptools;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -17,7 +16,7 @@ import javax.swing.*;
  * for one chart.
  *
  * @author Hua Zhong
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.5 $
  */
 public class TabPanel extends JPanel {
 
@@ -25,12 +24,12 @@ public class TabPanel extends JPanel {
     private SharpTableModel model;
     private JTabbedPane tab;
     private HistoPanel histo;
-
+    
     // values
     private CellRange range;
     private Float startvalue, endvalue, bucketvalue,
 	xmin, xmax, ymin, ymax, xunit, yunit;
-    private boolean bypercentage = true;
+    private boolean bypercentage = true;    
 
     /**
      * Constructor
@@ -47,7 +46,7 @@ public class TabPanel extends JPanel {
 	this.model = tableModel;
 	this.tab = pane;
 	this.range = range;
-
+	
 	// set layout - tedious..
 	setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 	setLayout(new BorderLayout());
@@ -55,7 +54,7 @@ public class TabPanel extends JPanel {
 	// add the HistoPanel - our canvas
 	histo = new HistoPanel();
 	histo.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-	add(histo, BorderLayout.CENTER);
+	add(histo, BorderLayout.CENTER);	
 
 	// buttons
 	JPanel south = new JPanel();
@@ -69,7 +68,7 @@ public class TabPanel extends JPanel {
 		public void actionPerformed(ActionEvent evt) {
 		    // remove the current tab
 		    tab.remove(tab.getSelectedComponent());
-
+		    
 		    // if there is no tab left, close the window
 		    if (tab.getTabCount() == 0) {
 			owner.hide();
@@ -78,11 +77,11 @@ public class TabPanel extends JPanel {
 	    });
 
 	// Options button
-	JButton optionButton = new JButton("Options...", SharpTools.getImageIcon("options.gif"));
+	JButton optionButton = new JButton("Options...", SharpTools.getImageIcon("options.gif"));	
 	optionButton.setMnemonic(KeyEvent.VK_O);
 	optionButton.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent evt) {
-		    getOptions(false);
+		    getOptions(false);		    
 		}
 	    });
 
@@ -98,13 +97,13 @@ public class TabPanel extends JPanel {
 					   histo.getHeight());
 		}
 	    });
-
+	
 	south.add(updateButton);
 	south.add(optionButton);
 	south.add(closeButton);
-
+	
 	add(south, BorderLayout.SOUTH);
-    }
+    }    
 
     /**
      * Parameter configuration for this histogram
@@ -119,7 +118,7 @@ public class TabPanel extends JPanel {
 
 	// title textfield
 	option.setTitleField(tab.getTitleAt(tab.getSelectedIndex()));
-
+	
 	if (firstTime) {
 	    // set initial values
 	    option.setCellRange(range);
@@ -128,8 +127,8 @@ public class TabPanel extends JPanel {
 	    int min = (int)minmax[0];
 	    int max = (int)minmax[1];
 
-	    startvalue = new Float(min);
-	    endvalue = new Float(max);
+	    startvalue = new Float(min);	    
+	    endvalue = new Float(max);	    
 
 	    // estimate a reasonable bucket size
 	    int power = 0;
@@ -137,13 +136,13 @@ public class TabPanel extends JPanel {
 		power = (int)((Math.log(max-min)/Math.log(10)));
 	    if (power<0)
 		power--;
-
+	    
 	    bucketvalue = new Float(Math.pow(10, power));
 	    xunit = bucketvalue;
 
 	    xmin = new Float(min);
 	    xmax = new Float(max);
-
+	    
 	    ymin = new Float(0);
 	    ymax = new Float(100);
 	    yunit = new Float(10);
@@ -187,7 +186,7 @@ public class TabPanel extends JPanel {
 	    update();
 	}
     }
-
+    
     /**
      * get the min and max values from the cell range
      *
@@ -237,7 +236,7 @@ public class TabPanel extends JPanel {
 	histo.setData(data);
 
 	updateData();
-
+	
 	histo.setStartEndPoints(start, end, bucket);
 	histo.setXYAxis(xmin.floatValue(),
 			xmax.floatValue(),
@@ -248,7 +247,7 @@ public class TabPanel extends JPanel {
 
 	histo.setByPercentage(bypercentage);
 	histo.paintImmediately(0, 0, histo.getWidth(), histo.getHeight());
-
+	
     }
 
     /**
@@ -263,16 +262,16 @@ public class TabPanel extends JPanel {
 	float end = endvalue.floatValue();
 	float bucket = bucketvalue.floatValue();
 	float[] data = histo.getData();
-
+	
 	for (int k = 0; k < data.length; k++)
 	    data[k] = 0;
-
+	
 	// two more buckets below start or above end
 	//	float scale = end-start+2;
 
 	for (int i = range.getStartRow(); i <= range.getEndRow(); i++) {
             for (int j = range.getStartCol(); j <= range.getEndCol(); j++) {
-
+		
 		float value = 0;
 
 		try {
@@ -280,7 +279,7 @@ public class TabPanel extends JPanel {
 		}
 		catch (Exception e) {
 		}
-
+		
 		if (value < start)
 		    data[0]++;
 		else if (value > end)
@@ -312,19 +311,19 @@ public class TabPanel extends JPanel {
  * 1) Y axis direction is different
  * 2) We take border into account for virtual coordinate (so it has a smaller
  *    scale).
- *
+ * 
  * @author Hua Zhong
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.5 $
  */
 
-class HistoPanel extends JPanel /*implements ComponentListener*/ {
+class HistoPanel extends JPanel /*implements ComponentListener*/ {    
 
     private float[] bars; // distribution
     private float start, end, bucket;
     private float xmin, xmax, xunit;
     private float ymin, ymax, yunit;
     private float xscale, yscale; // xmax-xmin and ymax-ymin
-
+    
     private int xsize, ysize;
     private int xborder = 50;
     private int yborder = 40;
@@ -356,13 +355,13 @@ class HistoPanel extends JPanel /*implements ComponentListener*/ {
 
 	int maxdigits = Math.max(Math.max(len1, len2), len3);
 	xborder = maxdigits*getGraphics().getFontMetrics().charWidth('0')+10;
-
+	
     }
 
     public void setByPercentage(boolean bypercentage) {
 	this.bypercentage = bypercentage;
     }
-
+    
     public void setData(float[] data) {
 	bars = data;
     }
@@ -370,18 +369,18 @@ class HistoPanel extends JPanel /*implements ComponentListener*/ {
     public float[] getData() {
 	return bars;
     }
-
+    
     /**
      * This is the overriden method of customized drawing
      *
      * @param g the Graphics object
      */
     public void paintComponent(Graphics g) {
-	super.paintComponent(g);
+	super.paintComponent(g);	
 
 	if (bars == null)
 	    return;
-
+	
 	xsize = getXSize();
 	ysize = getYSize();
 
@@ -391,7 +390,7 @@ class HistoPanel extends JPanel /*implements ComponentListener*/ {
 
 	float xratio = xscale/xsize;
 	float yratio = yscale/ysize; // xscale/xsize; yscale/ysize
-
+	
 	// x axis
 	drawLine(g, 0, 0, xsize+20, 0);
 	// y xais
@@ -413,17 +412,17 @@ class HistoPanel extends JPanel /*implements ComponentListener*/ {
 	    drawLine(g, -3, ycoor, +3, ycoor);
 	    rString(g, String.valueOf(y), -5, ycoor);
 	}
-
+	
 	// draw bars!
 	// int barwidth = (int)(bucket/xratio);
 	for (int i = 0; i < bars.length; i++) {
 	    //	for (float x = start-bucket; x < end+bucket; x+=bucket) {
 	    float x = start+(i-1)*bucket;
 	    int ycoor = (int)((bars[i]-ymin)/yratio);
-
+	    
 	    int xcoor1 = (int)((x-xmin)/xratio);
 	    int xcoor2 = (int)((x+bucket-xmin)/xratio);
-
+	    
 
 	    // must be in range
 	    xcoor1 = Math.max(xcoor1, 0);
@@ -434,25 +433,25 @@ class HistoPanel extends JPanel /*implements ComponentListener*/ {
 
 	    if (i == bars.length-1)
 		xcoor2 = xsize;
-
+	    
 	    if (xcoor1 >= xcoor2)
 		continue;
 
 	    // draw the bar
 	    drawLine(g, xcoor1, 0, xcoor1, ycoor);
-
+	    
 	    drawLine(g, xcoor2, 0, xcoor2, ycoor);
-
+	    
 	    drawLine(g, xcoor1, ycoor, xcoor2, ycoor);
 
 	}
-
+	
     }
 
     private int getXSize() {
 	return getWidth()-2*xborder;
     }
-
+    
     private int getYSize() {
 	return getHeight()-2*yborder;
     }
@@ -473,15 +472,15 @@ class HistoPanel extends JPanel /*implements ComponentListener*/ {
 	// draw axis
 	g.drawString(s, x+xborder, ysize-y+yborder);
     }
-
-
+    
+    
     // do some internal coordinate translation
-
+    
     // coordinate translation for X (to virtual coordinate)
     private int getx(int x) {
 	return x+xborder;
     }
-
+    
     // coordinate translation for Y (to virtual coordinate)
     private int gety(int y) {
 	return ysize-y+yborder;

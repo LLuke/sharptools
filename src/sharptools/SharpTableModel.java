@@ -1,18 +1,18 @@
 /*
  * @(#)SharpTable.java
- *
- * $Id: SharpTableModel.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
+ * 
+ * $Id: SharpTableModel.java,v 1.89 2001/06/03 22:20:15 huaz Exp $
  *
  * Created on October 14, 2000, 8:10 PM
  */
-package sharptools;
+
 
 import java.util.*;
 import java.io.*;
 import javax.swing.*;
-import javax.swing.table.*;
-import javax.swing.event.TableModelListener;
-import javax.swing.event.TableModelEvent;
+import javax.swing.table.*; 
+import javax.swing.event.TableModelListener; 
+import javax.swing.event.TableModelEvent; 
 import javax.swing.event.TableColumnModelEvent;
 
 /** This is the table data structure of the spreadsheet (i.e. the heart of
@@ -24,21 +24,20 @@ import javax.swing.event.TableColumnModelEvent;
  * the Cell object. If you modified the cell class please check the methods
  * in this class.
  * @author Ricky Chin
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.89 $
  */
 public class SharpTableModel extends DefaultTableModel {
-
+    
     /** Stores modified state of document
      */
     private boolean modified;
     /** true if password has been changed
      */
     private boolean passwordModified;
-
+    
     /**  Stores file name of current document */
-    //    private File file;
     private SharpTools sharp;
-    /** holds the undo information for the table
+    /** holds the history information for the table
      */
     private History history;
 
@@ -67,10 +66,9 @@ public class SharpTableModel extends DefaultTableModel {
      * @param numColumns total number of columns including column header
      */
     public SharpTableModel(SharpTools sharp, int numRows, int numColumns) {
-
+	
         super(numRows, numColumns+1);
         //initialize row headers
-	//        for(int row = 1; row < numRows; row++) {
 	for(int row = SharpTools.baseRow; row < numRows; row++) {
             Cell temp = new Cell(new Integer(row+1));
             super.setValueAt(temp, row, 0);
@@ -131,8 +129,7 @@ public class SharpTableModel extends DefaultTableModel {
 	else
 	    return String.valueOf(Node.translateColumn(col));
     }
-
-    /* set history - must be called right after the construction */
+    
     /** This method associated the proper undo object to this SharpTableModel.
      * It must be called right after the constructor.
      * @param h the History object to associate with this SharpTableModel
@@ -140,7 +137,7 @@ public class SharpTableModel extends DefaultTableModel {
     void setHistory(History h) {
 	history = h;
     }
-
+    
     /**
      * This method gets the whole Cell object located at the these
      * coordinates. This method avoids the casting required when using
@@ -153,13 +150,13 @@ public class SharpTableModel extends DefaultTableModel {
      * null. If a cell does not exist in the SharpTableModel at that valid
      * coordinate, it creates an empty cell, places it at that spot and returns
      * it.
-     *
+     * 
      * @param aRow the row of the cell
      * @param aColumn the column of the cell
      * @return the Cell object at this location
      */
     public Cell getCellAt(int aRow, int aColumn) {
-
+	
         /* check for out of bounds */
 	if (aRow < 0 || aRow >= getRowCount() ||
 	    aColumn < 0 || aColumn >= getColumnCount()) {
@@ -167,11 +164,11 @@ public class SharpTableModel extends DefaultTableModel {
 	}
 
         Cell temp = (Cell)super.getValueAt(aRow, aColumn);
-
+	
 	return temp;
     }
 
-
+    
     /** This class returns the cell object at those coordinates. It does
      * exactly the same thing as getCellAt except that the return type is
      * Object. It is implemented because TableModel requires this method
@@ -184,13 +181,13 @@ public class SharpTableModel extends DefaultTableModel {
     public Object getValueAt(int aRow, int aColumn) {
         return getCellAt(aRow, aColumn);
     }
-
+    
 
     /**
      * This is a warper method of the Formula class's evaluate method. This
-     * method recalculates the value of a formula at the given coordinates.
+     * method recalculates the value of a formula at the given coordinates. 
      * If the coordinates do not specify a formula it does nothing.
-     *
+     * 
      * @param aRow the row coordinate
      * @param aColumn the column coordinate
      */
@@ -214,14 +211,14 @@ public class SharpTableModel extends DefaultTableModel {
     /**
      * This is the version of recalculate that takes a CellPoint object as an
      * argument.
-     *
+     * 
      * @param x the coordinates of the cell to be updated
      */
     public void recalculate(CellPoint x) {
         recalculate(x.getRow(), x.getCol());
     }
 
-
+    
     /** This is a static method that parses string input passed to it from
      * somewhere else. It parses the input and returns the appropriate object
      * including formula object. It is used to create appropriate objects to
@@ -232,15 +229,15 @@ public class SharpTableModel extends DefaultTableModel {
      */
     private static Object fieldParser(String input, CellPoint c) {
         if (input == null)
-	    return new String("");
-
+	    return new String("");	
+	
         int row = c.getRow();
         int col = c.getCol();
-
+        
 	/* try making it a formula */
 	if (input.startsWith("=")) {
-	    Formula form = null;
-
+	    Formula form = null;	    
+	
             //create formula and its value and put in a cell
 	    try {
 	        return new Formula(input.substring(1), row, col);
@@ -248,8 +245,8 @@ public class SharpTableModel extends DefaultTableModel {
 		// no parsing
 		return new Formula(input.substring(1), row, col, e);
 	    }
-
-        }else {
+		
+        }else {       
 	    /* try making it a number */
 	    try {
 		//		try {
@@ -264,7 +261,7 @@ public class SharpTableModel extends DefaultTableModel {
             }
         }
     }
-
+	
     /** This method does not recognize formula strings. It is used for dialogue
      * box input where there will be no formulas inputted or expected to be
      * inputted.
@@ -273,8 +270,8 @@ public class SharpTableModel extends DefaultTableModel {
      */
     public static Object fieldParser(String input) {
         if (input == null)
-	    return new String("");
-
+	    return new String("");	
+	
 	/* try making it a number */
 	try {
 	    return new Float(input);
@@ -284,7 +281,7 @@ public class SharpTableModel extends DefaultTableModel {
         }
     }
 
-
+    
     /** Sets the value of the cell. It takes care of formulas and data.
      * If aValue is a string, it parses it to see if it is a formula (begins
      * with an "=") or a number. It then sets the value of the cell
@@ -300,11 +297,11 @@ public class SharpTableModel extends DefaultTableModel {
      * @param aColumn column coordinate
      */
     public void setValueAt(Object aValue, int aRow, int aColumn) {
-	CellPoint point = new CellPoint(aRow, aColumn);
+	CellPoint point = new CellPoint(aRow, aColumn);	
 	history.add(this, new CellRange(point, point));
 	doSetValueAt(aValue, aRow, aColumn);
     }
-
+    
     /** This method sets the value of the cell specified with these coordinates
      * to aValue. It does the parsing of string objects to see if they are
      * numbers or formulas. If you do not want any parsing at all, use
@@ -316,16 +313,16 @@ public class SharpTableModel extends DefaultTableModel {
     public void doSetValueAt(Object aValue, int aRow, int aColumn) {
 
 	if (aValue == null)
-	    aValue = new String("");
-
+	    aValue = new String("");	
+	
 	if (aValue instanceof String) {
 
 	    String input = (String)aValue;
-
+	    
 	    /* try making it a formula */
 	    if (input.startsWith("=")) {
-		Formula form = null;
-
+		Formula form = null;	    
+		
 		//create formula and its value and put in a cell
 		try {
 		    form = new Formula(input.substring(1),
@@ -338,29 +335,29 @@ public class SharpTableModel extends DefaultTableModel {
 		    setCellAt(form, aRow, aColumn);
 		    getCellAt(aRow, aColumn).setValue(e);
 		}
-
+		
 	    }else {
 
 		//                try {
 		//		    Integer idata = new Integer(input);
 		//		    setCellAt(idata, aRow, aColumn);
 		//		}
-
+                
                 /* if it begins with "=" but invalid just
                  * treat as a string
                  */
-
+		
 		//		catch (NumberFormatException e) {
 		    /* try making it a number */
 		    try {
 			Float data = new Float(input);
 			setCellAt(data, aRow, aColumn);
 		    }
-
+                
 		    /* if it begins with "=" but invalid just
 		     * treat as a string
 		     */
-
+		
 		    catch (NumberFormatException e2) {
 			/* all else fails treat as string */
 			setCellAt(aValue, aRow, aColumn);
@@ -382,12 +379,12 @@ public class SharpTableModel extends DefaultTableModel {
 		    setCellAt(form2, aRow, aColumn);
 		    getCellAt(aRow, aColumn).setValue(e);
                 }
-            }else {
+            }else {		  
                 setCellAt(aValue, aRow, aColumn);
             }
         }
     }
-
+    
     /** This object assumes that the object passes to it is already the
      * correct object to set the value of the cell as. For a formula, it
      * also calculcates the value of the formula and records that in the cell.
@@ -401,19 +398,9 @@ public class SharpTableModel extends DefaultTableModel {
 	/* if for some reason value out of bounds ignore */
         if (temp != null) {
 
-	    // check whether string has been modified
-	    /*
-	    if (temp.isFormula() && input instanceof Formula &&
-		temp.getFormula().toString().equalsIgnoreCase
-		(input.toString()) && !temp.getFormula().isBad()) {
-		System.err.println("cell not modified");
-		return;
-	    }
-	    */
-	    //	    setModified(true);
 	    //always remove references old formula referred to
 	    removeRefs(aRow, aColumn);
-
+            
 	    //insert new formula
 	    if (input instanceof Formula) {
 		temp.setFormula((Formula)input);
@@ -426,12 +413,12 @@ public class SharpTableModel extends DefaultTableModel {
 		    updateRefs(aRow, aColumn);
 		    return;
                 }else {
-
+		    
 		    addRefs(aRow, aColumn);
 		    recalculate(aRow, aColumn);
 		    updateRefs(aRow, aColumn);
 
-                }
+                }		    
             }else {
                 //treat as normal data cell
 		temp.setData(input);
@@ -440,7 +427,7 @@ public class SharpTableModel extends DefaultTableModel {
 	}
     }
 
-
+    
     /** This method sets the cells given by the range to the cooresponding value
      * in the Object array. In other words, this method pastes the object array
      * onto the range. It is assumed that the range and Object array have the
@@ -449,44 +436,44 @@ public class SharpTableModel extends DefaultTableModel {
      * @param data the data to paste
      */
     public void setRange(CellRange range, Object[][] data) {
-
+        
         /* Loop through the paste range */
         for (int i = range.getStartRow(); i <= range.getEndRow(); i++) {
             for (int j = range.getStartCol(); j <= range.getEndCol(); j++) {
-
+                
                 //calculate the corresponding entry in data array
                 int x = i - range.getStartRow();
                 int y = j - range.getStartCol();
-
+                
                 //place data entry at that place
                 doSetValueAt(data[x][y], i, j);
             }
         }
     }
-
-
-    /**
+        
+        
+    /** 
      * This is a method used to paste cells onto the table. This method
      * is used by the SharpClipboard class. It's feature is that it can
      * paste only the old evaluated values or it can be told to paste
      * the data cells and formulas.
-     *
+     * 
      * @param range range to paste to
      * @param data cells that need to be pasted
      * @param byValue true if only paste values if there are formula
      */
     public void setRange(CellRange range, Cell[][] data, boolean byValue) {
-
-        /* there may be formula so if byValue is true paste evaluated formula
+        
+        /* there may be formula so if byValue is true paste evaluated formula 
          * value into the range as a data cell
          */
         if (byValue) {
             for (int i = range.getStartRow(); i <= range.getEndRow(); i++) {
                 for (int j = range.getStartCol(); j <= range.getEndCol(); j++) {
-
+                    
                     int x = i - range.getStartRow();
                     int y = j - range.getStartCol();
-
+                    
                     //get only value of a formula cell not formula
 		    doSetValueAt(data[x][y].getValue(), i, j);
                 }
@@ -494,11 +481,11 @@ public class SharpTableModel extends DefaultTableModel {
         }else {
             for (int i = range.getStartRow(); i <= range.getEndRow(); i++) {
                 for (int j = range.getStartCol(); j <= range.getEndCol(); j++){
-
+                   
                     int x = i - range.getStartRow();
                     int y = j - range.getStartCol();
                     Cell info = data[x][y];
-
+                    
                     //paste new formula to recalculate
                     if (info.isFormula()) {
                         doSetValueAt(info.getFormula(), i, j);
@@ -509,23 +496,23 @@ public class SharpTableModel extends DefaultTableModel {
             }
         }
     }
-
-    /**
+    
+    /** 
      * This method clears all cells in the range but leaves the
      * reference lists alone.
      *
      * @param range range to clear
      */
-    public void clearRange(CellRange range) {
+    public void clearRange(CellRange range) {           
         fill(range, null);
     }
-
-
+    
+    
     protected void fillRange(CellRange range, String s) {
         fill(range, SharpTableModel.fieldParser(s, range.getminCorner()));
     }
-
-    /**
+    
+    /** 
      * This method is used to implement the fills of the spreadsheet.
      * It takes a range and fills the range with the object. For formula,
      * it is equivalent to pasting the formula on every cell in the range.
@@ -534,7 +521,7 @@ public class SharpTableModel extends DefaultTableModel {
      * @param input object to fill range with
      */
     protected void fill(CellRange range, Object input) {
-
+        
         //loop through range
         for (int i = range.getStartRow(); i <= range.getEndRow(); i++) {
             for (int j = range.getStartCol(); j <= range.getEndCol(); j++) {
@@ -542,7 +529,7 @@ public class SharpTableModel extends DefaultTableModel {
             }
         }
     }
-
+    
     /** This searches of an object starting from a cell point.
      * @param begin cellpoint to begin search
      * @param goal the object to search for
@@ -555,7 +542,7 @@ public class SharpTableModel extends DefaultTableModel {
 			     boolean matchCell) {
         int startRow = begin.getRow();
         int startCol = begin.getCol();
-
+	
 	if ((goal instanceof String) && !matchCase && matchCell) {
             String objective = (String)goal;
 	    for(int i = startCol; i < getColumnCount(); i++) {
@@ -564,7 +551,7 @@ public class SharpTableModel extends DefaultTableModel {
 		    return new CellPoint(startRow, i);
 		}
 	    }
-
+	    
 	    for(int i = startRow + 1; i < getRowCount(); i++) {
 		for(int j = 1; j < getColumnCount(); j++) {
 		    if (objective.equalsIgnoreCase(
@@ -573,15 +560,15 @@ public class SharpTableModel extends DefaultTableModel {
 		    }
 		}
 	    }
-
+	    
 	    return null;
-
+            
 	}else {
             if ((goal instanceof String) && !matchCell) {
                 String objective = (String)goal;
 	        for(int i = startCol; i < getColumnCount(); i++) {
 		    String test = getCellAt(startRow, i).getValue().toString();
-
+                    
                     if (!matchCase) {
                         objective = objective.toUpperCase();
                         test = test.toUpperCase();
@@ -590,10 +577,10 @@ public class SharpTableModel extends DefaultTableModel {
 			if (test.startsWith(objective, k)) {
 			    return new CellPoint(startRow, i);
 			}
-
+			    
                     }
-                }
-
+                }			    
+		    
 		for(int i = startRow + 1; i < getRowCount(); i++) {
 		    for(int j = 1; j < getColumnCount(); j++) {
 			String test = getCellAt(i, j).getValue().toString();
@@ -608,15 +595,15 @@ public class SharpTableModel extends DefaultTableModel {
                         }
                     }
                 }
-
+			
 		return null;
-            }else {
+            }else {                
 		for(int i = startCol; i < getColumnCount(); i++) {
 		    if (goal.equals(getCellAt(startRow, i).getValue())) {
 			return new CellPoint(startRow, i);
 		    }
 		}
-
+		
 		for(int i = startRow + 1; i < getRowCount(); i++) {
 		    for(int j = 1; j < getColumnCount(); j++) {
 			if (goal.equals(getCellAt(i, j).getValue())) {
@@ -624,13 +611,13 @@ public class SharpTableModel extends DefaultTableModel {
 			}
 		    }
 		}
-
+			
 		return null;
             }
         }
     }
-
-    /**
+    
+    /** 
      * This method copies the cells in a range
      * into a two-dimensional array of cells.
      *
@@ -638,22 +625,22 @@ public class SharpTableModel extends DefaultTableModel {
      * @return copy of range
      */
     public Cell[][] getRange(CellRange range) {
-
+        
         //get dimensions of range
         Cell[][] board = new Cell[range.getHeight()][range.getWidth()];
-
-        //copy the cells
+        
+        //copy the cells    
         for (int i = range.getStartRow(); i <= range.getEndRow(); i++) {
             for (int j = range.getStartCol(); j <= range.getEndCol(); j++) {
-
+                
                 //translate to coordinates in copy array
                 int x = i - range.getStartRow();
                 int y = j - range.getStartCol();
-
+                
                 Cell field = getCellAt(i, j);
-
+             
                 /* if it is a formula copy both the value and the formula
-                 * The value will be useful with a paste by value
+                 * The value will be useful with a paste by value 
                  */
                 if (field.isFormula()) {
                     try {
@@ -674,14 +661,14 @@ public class SharpTableModel extends DefaultTableModel {
         return board;
     }
 
-    /**
+    /** 
      * This method should be called with a cell is set as a formula
      * cell (although it does nothing if it is not a formula). When a formula
      * is entered, it may reference other cells. These cells need to be
      * notified that if they are changed, to notify this formula cell.
      * This method adds the cell coordinates to the reference list of each
      * cell that the formula references.
-     *
+     * 
      * @param aRow row of formula cell
      * @param aColumn column of formula cell
      */
@@ -689,7 +676,7 @@ public class SharpTableModel extends DefaultTableModel {
         if (isFormula(aRow, aColumn)) {
             Formula temp = getCellAt(aRow, aColumn).getFormula();
             TreeSet list = temp.getDependency();
-
+         
             /* use formula's dependency to find cells
              * that need to notify it if their values
              * change
@@ -699,20 +686,20 @@ public class SharpTableModel extends DefaultTableModel {
 	    while (it.hasNext()) {
                 CellPoint update = (CellPoint)it.next();
 		Cell field = getCellAt(update.getRow(), update.getCol());
-
+		
                 //test of cell found was out of bounds
 		if (field != null)
 		    field.addRef(thisRef);
             }
         }
     }
-
+    
     /**
      * This method removes this formula cell from the reference lists of all
      * cells it references. If this is not a formula cell, it does nothing.
      * This method should be called with a formula cell is being changed to a
      * non-Formula cell.
-     *
+     * 
      * @param aRow row of cell to remove from reference list
      * @param aColumn column of cell to remove from reference list
      */
@@ -720,7 +707,7 @@ public class SharpTableModel extends DefaultTableModel {
         if (isFormula(aRow, aColumn)) {
             Formula temp = getCellAt(aRow, aColumn).getFormula();
             TreeSet list = temp.getDependency();
-
+	    
             /* use formula dependcy list to go to cells that it references
              * then remove its entry form their reference list
              */
@@ -729,59 +716,36 @@ public class SharpTableModel extends DefaultTableModel {
 	    while (it.hasNext()) {
                 CellPoint update = (CellPoint)it.next();
                 Cell field = getCellAt(update.getRow(), update.getCol());
-
+                
 		if (field != null)
 		    field.removeRef(thisRef);
-
+                
             }
         }
     }
 
-    /**
-     * This method updates the values of all cells that in a dependency set.
-     *
-     * @param refs the reference set containning cells
-     */
-    /*
-    private void updateRefs(TreeSet refs) {
-
-	Iterator pointer = refs.iterator();
-
-	TreeSet set = getRefs
-
-	// update cells one by one
-	while (pointer.hasNext()) {
-	    CellPoint update = (CellPoint)pointer.next();
-	    recalculate(update);
-
-	    updateRefs(update.getRow(), update.getCol());
-        }
-    }
-    */
-    /**
+    /** 
      * This method updates the values of all cells that
      * reference this one. It recursively updates all cells that depend on this
      * one and cells that depend on those, etc.
-     *
+     * 
      * @param aRow row of cell to update
      * @param aColumn column of cell to update
      */
     public void updateRefs(int aRow, int aColumn) {
-
+	
         Cell temp = getCellAt(aRow, aColumn);
 	if (temp == null)
 	    return;
 
 	TreeSet set = getRefs(aRow, aColumn);
-//	Debug.println("refs set for "+Node.translateColumn(aColumn)+
-//		      Node.translateRow(aRow)+": "+set);
 
 	// mark it as "needsRecalc";
 	Iterator it = set.iterator();
 	while (it.hasNext()) {
 	    CellPoint point = (CellPoint)it.next();
 	    Formula formula = getCellAt(point.getRow(), point.getCol()).getFormula();
-
+	    
 	    formula.setNeedsRecalc(true);
 	    // make sure JTable refreshes it
 	    //fireTableCellUpdated(point.getRow(), point.getCol());
@@ -796,19 +760,19 @@ public class SharpTableModel extends DefaultTableModel {
 	    }
 	    catch (ParserException e) {
 	    }
-
+	    
 	    // make sure JTable refreshes it
 	    fireTableCellUpdated(point.getRow(), point.getCol());
 	}
-
+	
         //make sure to tell JTable things have changed
 	fireTableCellUpdated(aRow, aColumn);
     }
 
-    /**
+    /** 
      * This method gets the set of cells that will be affects
      * by a value change for the cpecified cell.
-     *
+     * 
      * @param row the row
      * @param col the column
      *
@@ -818,12 +782,12 @@ public class SharpTableModel extends DefaultTableModel {
 	getRefs(row, col, set);
 	return set;
     }
-
-    /**
+    
+    /** 
      * This method is a helper method for getReds(int, int).
      * It recursively gets refs for each cell and merges it into
      * the set.
-     *
+     * 
      * @param row the row
      * @param col the column
      * @param set the current of cells
@@ -834,23 +798,23 @@ public class SharpTableModel extends DefaultTableModel {
 	Cell cell = getCellAt(row, col);
 	if (cell == null || !cell.hasRefs())
 	    return;
-
+	
 	Iterator it = cell.getRefs().iterator();
 	while (it.hasNext()) {
 	    CellPoint point = (CellPoint)it.next();
 	    set.add(point);
 	    getRefs(point.getRow(), point.getCol(), set);
-	}
+	}	
     }
-
-    /**
+    
+    /** 
      * This method recalculates all cells in the table
      *
      * @see #insertRow
      * @see #insertColumn
      * @see #removeRow
      * @see #removeColumn
-     *
+     * 
      */
     public void recalculateAll() {
 	for (int i = 1; i < getRowCount(); i++)
@@ -860,7 +824,7 @@ public class SharpTableModel extends DefaultTableModel {
 	    }
     }
 
-
+    
     /** This method removes columns in the range.
      * @param deletionRange the range that contains the columns to delete
      */
@@ -869,27 +833,27 @@ public class SharpTableModel extends DefaultTableModel {
         /* since the insertion point is given by a selected cell
          * there will never be an out of bounds error
          */
-
+        
         /* first column to delete */
         int col = deletionRange.getStartCol();
-
+        
         /* number of columns to delete including col */
         int removeNum = deletionRange.getWidth();
-
+        
         //last entry of table
         int lastRow = getRowCount() - 1;
         int lastCol = getColumnCount() - 1;
-
-
+        
+        
         /* everything to the right of the columns to remove
          * need to be copied to be shifted right
          */
         CellRange range = new CellRange(SharpTools.baseRow, lastRow,
                                         col + removeNum, lastCol);
-
-
+	
+        
         SharpClipboard scrap = new SharpClipboard(this, range, true);
-
+        
         JTable table = sharp.getTable();
         for(int i = 0; i < removeNum; i++) {
             // delete old column
@@ -897,48 +861,48 @@ public class SharpTableModel extends DefaultTableModel {
 	    TableColumnModel tm = table.getColumnModel();
 	    tm.removeColumn(tm.getColumn(tm.getColumnCount() - 1));
 	}
-
+        
         //shift clipboard elements right
         scrap.paste(this, new CellPoint(SharpTools.baseRow, col));
 
 	//	updateRefs(refs);
 	recalculateAll();
-
+	
 	// set selection
 	if (table.getSelectedColumnCount() == 0) {
 	    setSelection(new CellRange(SharpTools.baseRow, SharpTools.baseRow,
 				       col, col));
 	}
 
-	fireTableStructureChanged();
+        //	fireTableStructureChanged();
 	sharp.setBaseColumnWidth();
     }
-
+    
     private void removeColumn() {
-	//        System.out.println("Fails in basic remove");
+
         int lastRow = getRowCount() - 1;
         int lastCol = getColumnCount() - 1;
-
+        
         //remove the data from cells to delete to maintain references
         clearRange(new CellRange(SharpTools.baseRow, lastRow, lastCol, lastCol));
-
+        
         Iterator it = dataVector.iterator();
         while (it.hasNext()) {
             /* Since deleting B makes C the
-             * new B, the reference lists in cells of old "B"
+             * new B, the reference lists in cells of old "B"  
              * should not change. So, we only shift the data in cells right
              * and deleted the last columns.
              */
             Vector temp = (Vector)it.next();
             temp.removeElementAt(getColumnCount() - 1);
         }
-
+        
         //update inherited field from  DefaultTableModel
         columnIdentifiers.removeElementAt(columnIdentifiers.size() - 1);
-
+        
         // Notification is generated within the GUI
     }
-
+    
     /** This method inserts columns to the left of the range with the number of
      * new columns equal to the number of columns in the range.
      * @param insertRange range of cells to add new columns to the left of
@@ -952,17 +916,17 @@ public class SharpTableModel extends DefaultTableModel {
         Debug.println("insertRange: "+insertRange);
         /* start inserting at this coordinate */
         int col = insertRange.getStartCol();
-
+        
         /* number of columns to insert including col */
         int insertNum = insertRange.getWidth();
-
+        
         //the coordinates of the last cell in table
         int lastRow = getRowCount() - 1;
         int lastCol = getColumnCount() - 1;
-
+        
         /* everything right to new columns must be shifted right
          * so cut them to the clipboard. So if col is "C" then it
-         * is also copied. The max is a guard for inserting
+         * is also copied. The max is a guard for inserting 
          * before the label column.
          */
         CellRange range = new CellRange(SharpTools.baseRow, lastRow, Math.max(col, SharpTools.baseCol), lastCol);
@@ -974,10 +938,13 @@ public class SharpTableModel extends DefaultTableModel {
             addColumn();
 	    TableColumnModel tm = table.getColumnModel();
 	    TableColumn column = tm.getColumn(tm.getColumnCount() - 1);
-	    tm.addColumn(new TableColumn(tm.getColumnCount(),
-                                         column.getPreferredWidth()));
+            TableColumn newcol = new TableColumn(tm.getColumnCount(), 
+                                                 column.getPreferredWidth());
+            newcol.setHeaderValue(new Character((char)('A' + lastCol +
+                                                       1 + i)));
+	    tm.addColumn(newcol);
         }
-
+        
         //shift relevant columns left
         scrap.paste(this, new CellPoint(SharpTools.baseRow, col + insertNum));
 
@@ -986,30 +953,31 @@ public class SharpTableModel extends DefaultTableModel {
 
 	if (table.getSelectedColumnCount() == 0) {
 	    setSelection(new CellRange(SharpTools.baseRow, SharpTools.baseRow,
-				       col, col));
+				       col, col));	    
 	}
+
 	//	sharp.setBaseColumnWidth();
-	fireTableStructureChanged();
+	//fireTableStructureChanged();
 	sharp.setBaseColumnWidth();
     }
-
+    
     /** Helper method for insertColumn. This method will not
      * send the appropriate notification to JTable. Please use insertColumn method
      * instead.
      */
     private void addColumn() {
-
+        
         columnIdentifiers.addElement(null);
 
         /* Initialize the new column */
         Iterator it = dataVector.iterator();
-
-        //Give column the appropriate label
+        
+        //Give column the appropriate label 
         if (it.hasNext()) {
             Cell temp = new Cell(Node.translateColumn(getColumnCount() - 1));
             ((Vector)it.next()).addElement(temp);
         }
-
+        
         //initialize cells
         while (it.hasNext()) {
             ((Vector)it.next()).addElement(new Cell(""));
@@ -1019,18 +987,8 @@ public class SharpTableModel extends DefaultTableModel {
 	/*        newColumnsAdded(new TableModelEvent(this, 0, getRowCount() - 1,
 		  getColumnCount() - 1, TableModelEvent.INSERT));
 	*/
-    }
-
-    /** sends notification that new columns are added
-     * @param event what rows were modified
-     */
-    //    private void newColumnsAdded(TableModelEvent event) {
-        // Now we send the notification
-    //        fireTableChanged(event);
-    //    }
-
-
-
+    }    
+        
     /** This method removes rows in the range.
      * @param deletionRange CellRange that contains the rows to delete
      */
@@ -1039,32 +997,32 @@ public class SharpTableModel extends DefaultTableModel {
          * there will never be an out of bounds error
          */
         clearRange(deletionRange);
-
+        
         /* first row to delete */
         int row = deletionRange.getStartRow();
-
+        
         /* number of rows to delete including the first */
         int removeNum = deletionRange.getHeight();
-
+        
         //coordinates of last cell in spreadsheet
         int lastRow = getRowCount() - 1;
         int lastCol = getColumnCount() - 1;
-
+        
         //everything lower than rows to remove must be copied to be shifted
         CellRange range = new CellRange(row + removeNum, lastRow,
 					SharpTools.baseCol, lastCol);
         SharpClipboard scrap = new SharpClipboard(this, range, true);
-
+           
         for(int i = 0; i < removeNum; i++) {
             super.removeRow(getRowCount() - 1);
         }
-
-
+        
+        
         //shift relevent rows up
-        scrap.paste(this, new CellPoint(row, SharpTools.baseCol));
+        scrap.paste(this, new CellPoint(row, SharpTools.baseCol));    
 
 	recalculateAll();
-
+	
 	JTable table = sharp.getTable();
 	// set selection
 	if (table.getSelectedColumnCount() == 0) {
@@ -1081,13 +1039,13 @@ public class SharpTableModel extends DefaultTableModel {
         /* since the insertion point is given by a selected cell
          * there will never be an out of bounds error
          */
-
+                          
         /* insert starting at this coordinate */
 	int row = insertRange.getStartRow();
-
+        
         /* number of rows to insert including row */
 	int insertNum = insertRange.getHeight();
-
+        
         //coordinates of last cell of table
 	int lastRow = getRowCount() - 1;
 	int lastCol = getColumnCount() - 1;
@@ -1097,18 +1055,17 @@ public class SharpTableModel extends DefaultTableModel {
          */
 	CellRange range = new CellRange(Math.max(row, SharpTools.baseRow), lastRow, SharpTools.baseCol, lastCol);
         SharpClipboard scrap = new SharpClipboard(this, range, true);
-
+        
         //add the rows to the end
         for(int i = 0; i < insertNum; i++) {
             addRow();
         }
-
+        
         //shift old rows down
-        //System.out.println((row + insertNum + 1));
         scrap.paste(this, new CellPoint(row + insertNum, SharpTools.baseCol));
 
 	recalculateAll();
-
+	
 	JTable table = sharp.getTable();
 	// set selection
 	if (table.getSelectedColumnCount() == 0) {
@@ -1122,16 +1079,14 @@ public class SharpTableModel extends DefaultTableModel {
      *  Adds row to end of table
      */
     private void addRow() {
-
+        
         //create a new row with appropriate label
         Vector rowData = new Vector();
-        rowData.add(0, new Cell(new Integer(getRowCount())));
-
+        rowData.add(0, new Cell(new Integer(getRowCount() + 1)));
+        
         //add it to the table
         super.addRow(rowData);
-        //System.out.println(getRowCount());
-
-        //initialize cells in new row
+        
         for(int i = 1; i < getColumnCount(); i++) {
             super.setValueAt(new Cell(""), getRowCount() - 1, i);
         }
@@ -1142,7 +1097,7 @@ public class SharpTableModel extends DefaultTableModel {
      * If it is a data cell, it returns the numerical value of the cell (for
      * a String the value is 0). If it is a formula, then it recalculates the
      * value and returns that as an answer.
-     *
+     * 
      * @param row row coordinate
      * @param col column coordinate
      * @throws ParserException if the value doesn't parse
@@ -1165,9 +1120,9 @@ public class SharpTableModel extends DefaultTableModel {
 		    catch (ParserException e) {
 			cell.setValue(e);
 			value = e;
-		    }
+		    }		
 		}
-
+		
 		if (value instanceof ParserException)
 		    throw (ParserException)value;
 		else
@@ -1185,9 +1140,9 @@ public class SharpTableModel extends DefaultTableModel {
 
     }
 
-    /**
+    /** 
      * Determines if a cell at these coordinates is a formula cell
-     *
+     * 
      * @param aRow row coordinate
      * @param aColumn column coordinate
      * @return true only if the cell at those coordinates is a formula
@@ -1196,10 +1151,10 @@ public class SharpTableModel extends DefaultTableModel {
         Cell temp = getCellAt(aRow, aColumn);
         return ((temp != null) && (temp.getType() == Cell.FORMULA));
     }
-
+        
     /**
      *  All Cells other than those in row 0 or column 0 are editable.
-     *
+     * 
      * @param row the row coordinate
      * @param column the column coordinate
      * @return true if cell is editable
@@ -1213,19 +1168,19 @@ public class SharpTableModel extends DefaultTableModel {
      *  JTable uses this method to determine the default renderer
      * editor for each cell. This method tells JTable to use
      * SharpCellRender and SharpCellEditor.
-     *
+     * 
      * @param c the column for which we need to determine the class
      * @return Cell class
      */
     public Class getColumnClass(int c) {
-
+        
         /* only cell objects in this TableModel */
         return Cell.class;
-    }
+    }    
 
     /**
      * Starting from cell, detect potential reference loops.
-     *
+     * 
      * @param cell specified CellPoint
      */
     private boolean isLoop(CellPoint cell) {
@@ -1234,13 +1189,13 @@ public class SharpTableModel extends DefaultTableModel {
 
     /**
      * Starting from cell, detect potential reference loops.
-     *
+     * 
      * @param cell specified CellPoint
      */
     private boolean isLoop(CellPoint cell, TreeSet set) {
 	if (set.contains(cell))
 	    return true;
-
+	
 	Cell objCell = getCellAt(cell.getRow(), cell.getCol());
 	if (objCell == null)
 	    return false;
@@ -1249,7 +1204,7 @@ public class SharpTableModel extends DefaultTableModel {
 	    return false;
 
 	set.add(cell);
-
+	
 	Iterator it = formula.getDependency().iterator();
 	while (it.hasNext()) {
 	    CellPoint newCell = (CellPoint)it.next();
@@ -1257,14 +1212,14 @@ public class SharpTableModel extends DefaultTableModel {
 	    if (ret)
 		return true;
 	}
-
+	
 	set.remove(cell);
 	return false;
     }
 
-    /**
+    /** 
      * Sets modified state of current document
-     *
+     * 
      * @param modified true sets state to modified
      */
     public void setModified(boolean modified) {
@@ -1272,7 +1227,7 @@ public class SharpTableModel extends DefaultTableModel {
 	// enable/disable the "Save" button
 	sharp.checkSaveState();
     }
-    /**
+    /** 
      * Sets modified state of password; can't undo
      *
      * @param modified sets state to modified
@@ -1286,7 +1241,7 @@ public class SharpTableModel extends DefaultTableModel {
 
     /**
      * Returns modified state of document
-     *
+     * 
      * @return document's modified value - true or false
      */
     public boolean isModified() {
@@ -1295,7 +1250,7 @@ public class SharpTableModel extends DefaultTableModel {
 
     /**
      * Returns JTable
-     *
+     * 
      * @return JTable
      */
     public JTable getTable() {
@@ -1308,7 +1263,7 @@ public class SharpTableModel extends DefaultTableModel {
      * @param sel the range to be selected
      */
     public void setSelection(CellRange sel) {
-	JTable table = sharp.getTable();
+	JTable table = sharp.getTable();	
 	// validate sel
 	int maxRow = table.getRowCount()-1;
 	int maxCol = table.getColumnCount()-1;
@@ -1322,7 +1277,7 @@ public class SharpTableModel extends DefaultTableModel {
 					 Math.min(endCol, maxCol));
 	table.setRowSelectionInterval(Math.min(startRow, maxRow),
 				      Math.min(endRow, maxRow));
-
+				      
     }
 
     /**
@@ -1335,13 +1290,13 @@ public class SharpTableModel extends DefaultTableModel {
     public boolean isDeletionSafe(CellRange range, boolean byRow) {
 	int rowOff, colOff;
 	CellRange needCheck;
-
+	
 	if (byRow) {
 	    rowOff = -range.getHeight();
 	    colOff = 0;
 	    if (range.getEndRow() == getRowCount()-1)
 		return true;
-
+	    
 	    needCheck = new CellRange(range.getEndRow()+1, getRowCount()-1,
 				      SharpTools.baseCol, getColumnCount()-1);
 	}
@@ -1366,7 +1321,7 @@ public class SharpTableModel extends DefaultTableModel {
 	    }
 
 	return true;
-
+	
     }
 
     /** toString is used to convert a range of cells into a string.
@@ -1382,7 +1337,7 @@ public class SharpTableModel extends DefaultTableModel {
      */
     public String toString(CellRange range, boolean byValue) {
 	StringBuffer sbf=new StringBuffer();
-
+	
 	for (int i=range.getStartRow(); i<=range.getEndRow(); i++) {
 	    for (int j=range.getStartCol(); j<=range.getEndCol(); j++) {
 
@@ -1395,7 +1350,7 @@ public class SharpTableModel extends DefaultTableModel {
 		    if(cell != null)
 			sbf.append(cell.toString());
 		}
-
+		
 		if (j<range.getEndCol())
 		    sbf.append("\t");
 	    }
@@ -1424,17 +1379,17 @@ public class SharpTableModel extends DefaultTableModel {
 	    BufferedReader in = new BufferedReader(new StringReader(text));
 	    String line;
 	    int row = range.getStartRow();
-
+	
 	    while (row <= range.getEndRow()) {
 		line = in.readLine();
-
+		
 		int index;
 		int prev = 0;
-
+		
 		// set col to startCol before each loop
 		int col = range.getStartCol();
 		String value;
-
+		
 		while (col <= range.getEndCol()) {
 		    index = line.indexOf('\t', prev);
 		    if (index >= 0) {
@@ -1443,10 +1398,10 @@ public class SharpTableModel extends DefaultTableModel {
 		    else {
 			value = line.substring(prev);
 		    }
-
+		    
 		    if (value.startsWith("=")) {
 				// need to fix relative address
-			value =
+			value = 
 			    Formula.fixRelAddr(value.substring(1),
 					       rowOff, colOff);
 			if (value == null)
@@ -1454,25 +1409,24 @@ public class SharpTableModel extends DefaultTableModel {
 			else
 			    value = "="+value;
 		    }
-
+		    
 		    doSetValueAt(value, row, col);
-		    // System.out.println(""+row+','+col+": "+value);
-
+		    
 		    prev = index+1;
 		    // increment column number
 		    col++;
-
+		    
 		    if (index == -1)
 			break;
 		}
-
+		
 		row++;
 	    }
 	}
-	catch (Exception e) {
+	catch (Exception e) {	    
 	}
     }
-
+    
     /**
      * convert the whole table to a string.
      *
@@ -1484,7 +1438,7 @@ public class SharpTableModel extends DefaultTableModel {
 	return toString(new CellRange(SharpTools.baseRow, getRowCount()-1,
 				      SharpTools.baseCol, getColumnCount()-1), false);
     }
-
+    
     /**
      * From a string input determine how many rows/columns it requires
      * for the table - it corresponds to the number of newlines and tabs.
@@ -1492,30 +1446,30 @@ public class SharpTableModel extends DefaultTableModel {
      * @param input the string to analyze
      */
     static public CellPoint getSize(String input) {
-
+	
 	BufferedReader in = new BufferedReader(new StringReader(input));
 	String line;
 	int rowcount = 0;
 	int colcount = 0;
 
 	try {
-
+	
 	    while ((line = in.readLine()) != null) {
 		rowcount++;
-		// initialize new tokenizer on line with tab delimiter.
+		// initialize new tokenizer on line with tab delimiter. 
 		//		tokenizer = new StringTokenizer(line, "\t");
 		int index;
 		int prev = 0;
-
+		
 		// set col to 1 before each loop
 		int col = 0;
-
+		
 		while (true) {
-		    index = line.indexOf('\t', prev);
+		    index = line.indexOf('\t', prev);		
 		    prev = index+1;
 		    // increment column number
 		    col++;
-
+		    
 		    if (index == -1)
 			break;
 		}
@@ -1527,7 +1481,6 @@ public class SharpTableModel extends DefaultTableModel {
 	catch (Exception e) {
 	    return null;
 	}
-	//	System.out.println(new CellPoint(rowcount, colcount));
 
 	return new CellPoint(rowcount, colcount);
     }
@@ -1543,11 +1496,11 @@ public class SharpTableModel extends DefaultTableModel {
      * @param tiebreaker true if sorting in ascending order by secondary criteria
      * data structure
      */
-    public void sort(CellRange area, int primary, int second, boolean isRow,
+    public void sort(CellRange area, int primary, int second, boolean isRow, 
 		boolean ascend, boolean tiebreaker) {
 
-
-        /* original data order will be saved here
+        
+        /* original data order will be saved here 
          * and placed on clipboard for undo
          */
         SharpClipboard[] data;
@@ -1570,23 +1523,23 @@ public class SharpTableModel extends DefaultTableModel {
                 data[i] = new SharpClipboard(this, temp, false);
             }
         }
-
-
+                                            
+        
         /* We are going to do the sort within the world of the data array
          * First, we do index sorting to create an index array.
          * Then according to the index array, we paste the entries in data
          * back in the sorted order.
          */
-
+        
         //do index sorting
         int[] indices = internalSort(area, primary, second, isRow, ascend, tiebreaker);
-
+            
         //paste accordingly
         if (isRow) {
 	    for (int i = area.getStartCol(); i <= area.getEndCol(); i++){
 		//point to paste at
                 CellPoint point = new CellPoint(area.getStartRow(), i);
-
+                
                 int y = i - area.getStartCol();
                 data[indices[y] - area.getStartCol()].paste(this, point);
             }
@@ -1594,16 +1547,16 @@ public class SharpTableModel extends DefaultTableModel {
             for (int i = area.getStartRow(); i <= area.getEndRow(); i++) {
 		//point to paste at
                 CellPoint point = new CellPoint(i, area.getStartCol());
-
+                
                 int y = i - area.getStartRow();
                 data[indices[y] - area.getStartRow()].paste(this, point);
             }
         }
     }
-
+    
     /**
      * This is a helper function that compares rows or columns
-     *
+     * 
      * @param data an array of cells
      * @param primary first criteria to sort by
      * @param secondary second criteria to sort by (set to -1 if not specified)
@@ -1612,9 +1565,9 @@ public class SharpTableModel extends DefaultTableModel {
      * @param j column or row to compare i to
      * @return -1 if i < j, 0 if i = j, 1 if i > j
      */
-    private int compareLines(int primary, boolean isRow, boolean ascending,
+    private int compareLines(int primary, boolean isRow, boolean ascending, 
                              int i, int j) {
-
+ 
             Cell x = getCriteria(primary, i, isRow);
             Cell y = getCriteria(primary, j, isRow);
             return x.compare(y, ascending);
@@ -1639,19 +1592,16 @@ public class SharpTableModel extends DefaultTableModel {
     /** Determines if cells are in the wrong order
      * Used only as helper method for sort.
      */
-    private boolean rightOrder(int primary, int second, boolean isRow, int i,
+    private boolean rightOrder(int primary, int second, boolean isRow, int i, 
 				int j, boolean ascend, boolean order) {
-
-        //compare by first criteria
+	
+        //compare by first criteria                            
         int result = compareLines(primary, isRow, ascend, i, j);
-        //System.out.println(primary+","+ isRow+","+ ascend+","+ i+","+ j);
-        //System.out.println(result);
-
+        
         //if equal, use second as tiebreaker
         if (result == 0) {
             result = compareLines(second, isRow, order, i, j);
-            //System.out.println("Second:"+ second +","+ isRow+","+ ascend+","+ i+","+ j);
-            //System.out.println(result);
+
             if (order) {
 		return (result < 0);
             }else {
@@ -1666,7 +1616,7 @@ public class SharpTableModel extends DefaultTableModel {
             }
 	}
     }
-
+    
     /** Helper for sort that does the sorting. To implement different algorithms
      * for sorting modify this method. Returns an index array after index sorting
      * @param area area to sort in
@@ -1679,8 +1629,8 @@ public class SharpTableModel extends DefaultTableModel {
      * @return index array with row/col numbers of how cells
      * should be arranged.
      */
-    private int[] internalSort(CellRange area, int primary, int second,
-			       boolean isRow, boolean ascend,
+    private int[] internalSort(CellRange area, int primary, int second, 
+			       boolean isRow, boolean ascend, 
 			       boolean tiebreaker) {
         //initialize index array
         int[] index;
@@ -1695,19 +1645,19 @@ public class SharpTableModel extends DefaultTableModel {
 		index[i] = i + area.getStartRow();
 	    }
 	}
-
+        
         int j;
-
+        
         for (int p = 1; p < index.length ; p++) {
 	    int tmp = index[p];
-
-            for (j = p; ((j > 0) && rightOrder(primary, second, isRow, tmp,
-						   index[j - 1], ascend, tiebreaker));
+	    
+            for (j = p; ((j > 0) && rightOrder(primary, second, isRow, tmp, 
+						   index[j - 1], ascend, tiebreaker)); 
 		 j--) {
                 index[j] = index[j - 1];
             }
 	    index[j] = tmp;
-        }
+        }        
         return index;
     }
 
@@ -1718,6 +1668,6 @@ public class SharpTableModel extends DefaultTableModel {
      */
     public boolean isEmptyCell(int row, int col) {
 	return getCellAt(row, col).getValue().equals("");
-
-    }
+	    
+    }    
 }

@@ -1,11 +1,10 @@
 /*
  * @(#)FindDialog.java
  *
- * $Id: FindDialog.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
+ * $Id: FindDialog.java,v 1.3 2001/05/27 22:28:57 huaz Exp $
  *
  * Created on November 28, 2000, 02:12 AM
  */
-package sharptools;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,16 +12,16 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 import java.awt.event.*;
 
-/**
+/** 
  * This class provides a find dialog.
  * User is prompted to choose find options.
- *
+ * 
  * @author Andrei Scudder
  * @author Hua Zhong (use SharpDialog)
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.3 $
  */
 public class FindDialog extends SharpDialog {
-
+    
     private JLabel label;
     private JFrame frame;
     final private JTextField textField = new JTextField(10);
@@ -36,15 +35,15 @@ public class FindDialog extends SharpDialog {
     public FindDialog(JFrame aFrame, String findValue, boolean mCase,
 		      boolean mCell) {
 	super(aFrame, "Find", true);
-
+	
 	textField.setText(findValue);
-
+	
 	caseSensitiveBox = new JCheckBox("Match Case");
 	caseSensitiveBox.setMnemonic(KeyEvent.VK_M);
 	caseSensitiveBox.setSelected(mCase);
-
+	
 	matchCellBox = new JCheckBox("Match Entire Cell Only");
-	matchCellBox.setMnemonic(KeyEvent.VK_E);
+	matchCellBox.setMnemonic(KeyEvent.VK_E); 
 	matchCellBox.setSelected(mCell);
 
 	JPanel box = new JPanel(new BorderLayout(0, 5));
@@ -52,21 +51,21 @@ public class FindDialog extends SharpDialog {
 	box.add(textField, BorderLayout.NORTH);
 	box.add(caseSensitiveBox, BorderLayout.WEST);
 	box.add(matchCellBox, BorderLayout.EAST);
-
-	setOptionPane(box,
+	
+	setOptionPane(box, 
 		      JOptionPane.PLAIN_MESSAGE,
 		      JOptionPane.OK_CANCEL_OPTION,
-		      findIcon);
+		      findIcon);	
     }
-
+    
     public boolean isCaseSensitive(){
-	return caseSensitive;
+	return caseSensitive;		
     }
-
+    
     public boolean isCellMatching(){
 	return matchCell;
     }
-
+    
     public String getString(){
 	return typedText;
     }

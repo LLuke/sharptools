@@ -1,18 +1,17 @@
 /*
  * @(#)ParserException.java
- *
- * $Id: ParserException.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
- *
+ * 
+ * $Id: ParserException.java,v 1.6 2000/11/18 07:12:17 huaz Exp $
+ * 
  * Created on October 28, 2000, 6:26 PM
  */
-package sharptools;
 
 /**
  * This Exception is raised when Formula fails in tokenizing or parsing the
  * formula.
  *
  * @author Hua Zhong <huaz@cs.columbia.edu>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.6 $
  */
 public class ParserException extends Exception {
     private boolean quiet;
@@ -24,7 +23,7 @@ public class ParserException extends Exception {
     public ParserException() { quiet = true; };
 
     /**
-     * @param msg the error message string
+     * @param msg the error message string 
      */
     public ParserException(String msg) { super(msg); this.msg = msg; };
 

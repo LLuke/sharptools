@@ -1,11 +1,10 @@
 /*
  * @(#)HelpOp.java
  *
- * $Id: HelpOp.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
+ * $Id: HelpOp.java,v 1.19 2001/05/27 22:30:41 huaz Exp $
  *
  * Created on October 22, 2000, 2:46 AM
  */
-package sharptools;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -16,18 +15,18 @@ import javax.swing.event.*;
 import javax.swing.text.*;
 
 /**
- * Code taken from
+ * Code taken from 
  * http://www.inquiry.com/techtips/java_pro/answer.asp?pro=java_pro&docID=2282.
- * Code for HTML Browser originally from DisplayHTML.java
+ * Code for HTML Browser originally from DisplayHTML.java 
  * by Daniel Savarese on 9/15/98.
- * This html browser allows for the browsing of local help files.
+ * This html browser allows for the browsing of local help files. 
  *
  * @author Daniel Medina, Daniel Goldberg
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.19 $
  */
 public class HelpOp {
 
-    private JEditorPane htmlPane;
+    private final JEditorPane htmlPane;
     private JScrollPane scrollPane;
     private JFrame frame;
     private Container container;
@@ -40,30 +39,30 @@ public class HelpOp {
 	frame = new JFrame("Help Browser: " + url);
 	container = frame.getContentPane();
 	container.setLayout(new BorderLayout());
-
+	
 	try {
 	    htmlPane = new JEditorPane(url);
 	} catch(IOException e) {
 	    e.printStackTrace();
 	    return;
 	}
-
+	
 	// We only want to display the file, not edit it.
 	htmlPane.setEditable(false);
-
+	
 	linkListener = new HyperlinkListener() {
 		public void hyperlinkUpdate(HyperlinkEvent e) {
 		    URL newURL;
 		    Document currentDocument;
-
+		    
 		    if(e.getEventType() != HyperlinkEvent.EventType.ACTIVATED)
 	  return;
-
+		    
 		    if((newURL = e.getURL()) == null)
 			return;
-
+		    
 		    currentDocument = htmlPane.getDocument();
-
+		    
 		    try {
 			htmlPane.setPage(newURL);
 		    } catch(IOException ex) {
@@ -71,15 +70,15 @@ public class HelpOp {
 		    }
 		}
 	    };
-
+	
 	htmlPane.addHyperlinkListener(linkListener);
 
 	scrollPane = new JScrollPane(htmlPane);
-
+	
 	container.add(scrollPane);
-
+	
 	scrollPane.setPreferredSize(new Dimension(500, 500));
-
+	
 	exitListener = new WindowAdapter() {
 		public void windowClosing(WindowEvent e) {
 		    Window window = e.getWindow();
@@ -87,16 +86,17 @@ public class HelpOp {
 		    window.dispose();
 		}
 	    };
-
+	
 	frame.addWindowListener(exitListener);
-
+	
 	frame.pack();
 	frame.show();
     }
 
     final static String message =
-	"<html><font size=2 color=black><p><font size=+1 color=blue><b>Sharp Tools Spreadsheet</b></font> Version 1.0</p>"+
+	"<html><font size=3 color=black><p><font size=+1 color=blue><b>Sharp Tools Spreadsheet</b></font> Version 1.4</p>"+
 	"<p><p>a product of the Sharp Tools Software Engineering Team"+
+        "<p>Copyright (c) 2000-2002"+
 	"<p><p><font color=green><b>Credits:</b><font></p>"+
 	"<ul><li>Hua Zhong</li><li>Ricky Chin</li><li>Daniel Goldberg</li>"+
 	"<li>Daniel Medina</li><li>Andrei Scudder</li></ul></p>"+
@@ -105,11 +105,11 @@ public class HelpOp {
 
     // display the About message box
     public static void showAboutBox(JFrame frame) {
-
+	
 	SharpOptionPane.showMessageDialog
 	    (frame,
 	     message,
-	     "About Sharp Tools Spreadsheet",
+	     "About Sharp Tools Spreadsheet",		 
 	     JOptionPane.INFORMATION_MESSAGE,
 	     SharpTools.getImageIcon("skull.gif"));
     }
@@ -119,13 +119,13 @@ public class HelpOp {
 
 	JPanel comboxPanel = new JPanel();
 	comboxPanel.setLayout(new BorderLayout());
-	String[] funcNames = {
+	String[] funcNames = {	    
 	    "Functions", "ABS", "AVERAGE", "COUNT", "E", "INT",
 	    "LOG", "MAX", "MEANDEV", "MEDIAN", "MIN", "PI", "RANGE", "ROUND",
 	    "SQRT", "SUM", "STDDEV",
-	    "SIN", "COS", "TAN", "ASIN", "ACOS", "ATAN"
+	    "SIN", "COS", "TAN", "ASIN", "ACOS", "ATAN"	    
 	};
-
+	
 	JComboBox funcList = new JComboBox(funcNames);
 	Dimension combodim = funcList.getSize();
 	funcList.setPreferredSize
@@ -136,7 +136,7 @@ public class HelpOp {
 	funcList.addActionListener(new FunctionListListener(frame, table));
 	return comboxPanel;
     }
-
+	
 }
 
 /**
@@ -156,11 +156,11 @@ class FunctionListListener implements ActionListener {
 	this.frame = frame;
 	this.table = table;
     }
-
+    
     public void actionPerformed(ActionEvent e) {
 	JComboBox cb = (JComboBox)e.getSource();
 	String funcName = (String)cb.getSelectedItem();
-
+		
 	try {
 	    if (table.isEditing()) {
 		int row = table.getEditingRow();
@@ -179,12 +179,12 @@ class FunctionListListener implements ActionListener {
 		else
 		    showGeneralFunctionHelp();
 		text.requestFocus();
-	    }
+	    }	    	
 	    else {
 		// pop up help message box!
 		Function fh = Formula.getFuncHandler(funcName);
 		if (fh != null) {
-
+		    
 		    String message = "<html><font size=2 color=black><b>"+
 			fh.getUsage()+"</b><p><p>"+fh.getDescription()+"<p></font>";
 
@@ -196,13 +196,13 @@ class FunctionListListener implements ActionListener {
 		}
 		else
 		    showGeneralFunctionHelp();
-
+		
 		table.requestFocus();
 	    }
 	}
 	catch (Exception exception) {};
 	// reset the selection and focus
-	cb.setSelectedIndex(0);
+	cb.setSelectedIndex(0);		
     }
 
     private void showGeneralFunctionHelp() {

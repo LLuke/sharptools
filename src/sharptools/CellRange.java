@@ -1,23 +1,22 @@
 /*
  * @(#)CellRange.java
  *
- * $Id: CellRange.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
+ * $Id: CellRange.java,v 1.13 2000/12/02 21:44:51 rkc10 Exp $
  *
  * Created on November 5, 2000, 1:19 AM
  */
-package sharptools;
 
-/**
+/** 
  * This class specifies how a range of cells are represented.
  * <p>
  * A range is a continuous rectangular area that can be specified by its
  * upper left corner (minCorner) and lower right corner (maxCorner).
- *
+ * 
  * @author Ricky Chin
- * @version $Id: CellRange.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
+ * @version $Id: CellRange.java,v 1.13 2000/12/02 21:44:51 rkc10 Exp $
  */
 public class CellRange {
-
+    
     /** Upper left corner of range */
     CellPoint minCorner;
 
@@ -35,32 +34,32 @@ public class CellRange {
         //rows selected are in ascending order
         int minRow = rows[0];
         int maxRow = rows[rows.length - 1];
-
+        
         //columns selected are in ascending order
         int minCol = cols[0];
         int maxCol = cols[cols.length - 1];
-
+		
          minCorner = new CellPoint(minRow, minCol);
          maxCorner = new CellPoint(maxRow, maxCol);
 	}
-
+    
     /**
      * This contructor takes x1, x2, y1, y2 and constructs a range.
-     *
+     * 
      * @param minRow upper left corner row coordinate
      * @param minCol upper left corner col coordinate
      * @param maxRow lower right corner row coordinate
      * @param maxCol lower right corner col coordinate
      */
     public CellRange(int minRow, int maxRow, int minCol, int maxCol) {
-
+	
 	minCorner = new CellPoint(minRow, minCol);
 	maxCorner = new CellPoint(maxRow, maxCol);
     }
 
     /**
      * This constructor takes two CellPoints to construct a range.
-     *
+     * 
      * @param ULHCorner upper left corner
      * @param LRHCorner lower right corner
      */
@@ -68,52 +67,52 @@ public class CellRange {
             minCorner = ULHCorner;
             maxCorner = LRHCorner;
     }
-
+    
     /**
      * This returns the first row in the range.
-     *
+     * 
      * @return first row of range
      */
     public int getStartRow() {
         return minCorner.getRow();
     }
-
+    
     /**
      * This returns the last row in the range.
-     *
+     * 
      * @return last row of range
      */
     public int getEndRow() {
         return maxCorner.getRow();
     }
-
+    
     /**
      * This returns the first column in the range.
-     *
+     * 
      * @return first column of range
      */
     public int getStartCol() {
         return minCorner.getCol();
     }
-
+    
     /**
      * This returns the last column in the range.
-     *
+     * 
      * @return last column of range
      */
     public int getEndCol() {
         return maxCorner.getCol();
     }
-
+    
     /**
      * This returns the number of columns in the range.
-     *
+     * 
      * @return number of columns in range
      */
     public int getWidth() {
         return getEndCol() - getStartCol() + 1;
     }
-
+    
     /**
      * This returns the number of rows in the range.
      *
@@ -131,7 +130,7 @@ public class CellRange {
     }
     /** This returns the lower right corner of the range
      * @return the lower right corner of the range
-     */
+     */    
     public CellPoint getmaxCorner() {
         return maxCorner;
     }

@@ -1,12 +1,10 @@
 /*
  * @(#)NumberField.java
- *
- * $Id: NumberField.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
- *
+ * 
+ * $Id: NumberField.java,v 1.7 2001/05/27 06:13:27 huaz Exp $
+ * 
  * Created Novenmber 25, 2000, 5:13 AM
  */
-package sharptools;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -23,7 +21,7 @@ import javax.swing.text.*;
  * @see AddressField
  *
  * @author Hua Zhong
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.7 $
  */
 public class NumberField extends JTextField {
 
@@ -43,7 +41,7 @@ public class NumberField extends JTextField {
 	setDocument(new NumberFilterDocument());
 	//	setInputVerifier(new NumberVerifier());
     }
-
+    
     /**
      * Construct a float-number only text field.  If positive is true
      * only positive float number is allowed.
@@ -72,7 +70,7 @@ public class NumberField extends JTextField {
 	this.integer = integer;
 	setDocument(new NumberFilterDocument());
 	//	setInputVerifier(new NumberVerifier());
-    }
+    }	
 
     /**
      * Construct a number only text field and can add more restriction
@@ -88,7 +86,7 @@ public class NumberField extends JTextField {
 	setDocument(new NumberFilterDocument());
 	//setInputVerifier(new NumberVerifier());
     }
-
+    
     /**
      * get the input float number
      *
@@ -158,7 +156,7 @@ public class NumberField extends JTextField {
 	    throws BadLocationException {
 	    if (text == null)
 		return;
-
+	    
 	    __scratchBuffer.setLength(0);
 
 	    // Reject all strings that cause the contents of the field not
@@ -190,7 +188,7 @@ public class NumberField extends JTextField {
 
 	    if (positiveOnly && value<0)
 		return;
-
+	    
 	    super.insertString(offset, text, aset);
 	}
     }
@@ -201,7 +199,7 @@ class NumberVerifier extends InputVerifier {
     NumberVerifier() {
     super();
     }
-
+    
     public boolean verify(JComponent input) {
 	JTextField tf = (JTextField)input;
 	String number = tf.getText();
@@ -218,7 +216,7 @@ class NumberVerifier extends InputVerifier {
 
 	if (positiveOnly && value < 0)
 	    return false;
-
+	
 	return true;
     }
 }

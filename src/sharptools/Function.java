@@ -1,11 +1,10 @@
 /*
  * @(#)Function.java
- *
- * $Id: Function.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
+ * 
+ * $Id: Function.java,v 1.22 2000/12/06 03:13:18 huaz Exp $
  *
  * Created on October 30, 2000, 10:29 AM
  */
-package sharptools;
 
 import java.util.*;
 import java.io.*;
@@ -19,12 +18,12 @@ import java.io.*;
  * is a number, a relative/absolute address or an address range (e.g., A1:B3).
  *
  * @author Hua Zhong
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.22 $
  */
-public abstract class Function {
+public abstract class Function {    
 
     static private ParserException exception = new ParserException("#PARAM?");
-
+    
     // whether the specified parameter node is an address range
     protected boolean isRange(Node param) {
 	LinkedList exp = param.getExp();
@@ -36,20 +35,20 @@ public abstract class Function {
     // return the first node of a specified parameter
     protected Node getFirst(Node param) {
 	return (Node)param.getExp().getFirst();
-    }
+    }    
 
     // whether this function has any parameter
     protected void checkParamsExist(Node func) throws ParserException {
-
+	
 	if (func.getParams().size()==0)
 	    throw exception;
     }
-
+    
     /**
      * This gets the first float number of a parameter list, for functions
      * only accepting a single parameter such as <code>ABS</code>, <code>COS
      * </code>, etc.
-     *
+     * 
      * @param table the SharpTabelModel
      * @param node the formula unit
      * @param col the int column coordinate
@@ -66,7 +65,7 @@ public abstract class Function {
 	    throw new ParserException("#PARAM?");
 
 	LinkedList exp = ((Node)params.getFirst()).getExp();
-
+	
 	return Formula.evaluate(table, exp, row, col).floatValue();
 
     }
@@ -74,7 +73,7 @@ public abstract class Function {
     /*
      * This gets two float numbers of a parameter list, for functions
      * only accepting two parameters.
-     *
+     * 
      * @param table the SharpTabelModel
      * @param node the formula unit
      * @param col the int column coordinate
@@ -93,7 +92,7 @@ public abstract class Function {
 	    throw new ParserException("#PARAM?");
 
 	float[] values = new float[2];
-
+	
 	LinkedList exp = ((Node)params.getFirst()).getExp();
 	values[0] = Formula.evaluate(table, exp, row, col).floatValue();
 
@@ -105,7 +104,7 @@ public abstract class Function {
     */
     /**
      * This should be implemented in each function.
-     *
+     * 
      * @param table the SharpTabelModel
      * @param node the function node starting with the funciton name
      * with a chain of parameters
@@ -120,7 +119,7 @@ public abstract class Function {
      * Return the usage of the function
      */
     public abstract String getUsage();
-
+    
     /**
      * Return the description of the function
      */
@@ -146,11 +145,11 @@ class FunctionSum extends Function {
 			  int row, int col) throws ParserException {
 	// requires parameters
 	checkParamsExist(node);
-
+	
 	float sum = 0;
 
 	LinkedList params = node.getParams();
-
+	
 	if (params != null) {
 
 	    // go over the parameters
@@ -162,7 +161,7 @@ class FunctionSum extends Function {
 		Node exp = (Node)it.next();
 
 		// if it's a range of cells
-		if (isRange(exp)) {
+		if (isRange(exp)) {	    
 		    CellPoint[] addr =
 			getFirst(exp).getAddressRange(row, col);
 		    // for a range, go over the whole range
@@ -176,7 +175,7 @@ class FunctionSum extends Function {
 		    sum += Formula.evaluate(table, exp.getExp(), row, col).floatValue();
 		}
 	    }
-
+	    
 	}
 
 	return (Number)(new Float(sum));
@@ -185,7 +184,7 @@ class FunctionSum extends Function {
     public String getUsage() {
 	return "SUM(value1,value2,...)";
     }
-
+    
     public String getDescription() {
 	return "Adds all the numbers in a set of values.";
     }
@@ -199,7 +198,7 @@ class FunctionSum extends Function {
  *   example: <code>=COUNT(A1:A7)</code> returns <code>7.0</code>
  */
 class FunctionCount extends Function {
-
+    
     public Number evaluate(SharpTableModel table, Node node,
 			int row, int col) throws ParserException {
 
@@ -209,7 +208,7 @@ class FunctionCount extends Function {
 	int count = 0;
 
 	LinkedList params = node.getParams();
-
+	
 	if (params != null) {
 
 	    Iterator it = params.iterator();
@@ -217,7 +216,7 @@ class FunctionCount extends Function {
 	    while (it.hasNext()) {
 		// the first parameter
 		Node exp = (Node)it.next();
-
+		
 		if (isRange(exp)) {
 		    // if it's a range then count the number of cells
 		    CellPoint[] addr =
@@ -227,19 +226,19 @@ class FunctionCount extends Function {
 		}
 		else {
 		    // otherwise count one
-		    count++;
+		    count++;		    
 		}
 	    }
-
+	    
 	}
-
+	
 	return new Integer(count);
     }
 
     public String getUsage() {
 	return "COUNT(value1,value2,...)";
     }
-
+    
     public String getDescription() {
 	return "Counts the number of cells that contain numbers and numbers within the list of arguments.";
     }
@@ -252,7 +251,7 @@ class FunctionCount extends Function {
  *   example: <code>=AVERAGE(1,2,3)</code> returns <code>2.0</code>
  */
 class FunctionAverage extends Function {
-
+    
     public Number evaluate(SharpTableModel table, Node node,
 			  int row, int col) throws ParserException {
 	float sum = (new FunctionSum()).evaluate(table, node, row, col).
@@ -265,10 +264,10 @@ class FunctionAverage extends Function {
     public String getUsage() {
 	return "AVERAGE(value1,value2,...)";
     }
-
+    
     public String getDescription() {
 	return "Returns the average (arithmetric mean) of its arguments.";
-    }
+    }    
 }
 
 /**
@@ -278,7 +277,7 @@ class FunctionAverage extends Function {
  *   example: <code>=MEDIAN(1,2,5)</code> returns <code>2.0</code>
  */
 class FunctionMedian extends Function {
-
+    
     public Number evaluate(SharpTableModel table, Node node,
 			  int row, int col) throws ParserException {
 	// requires parameters
@@ -291,11 +290,11 @@ class FunctionMedian extends Function {
 	float[] values = new float[nCells];
 
 	// get all the values
-
+	
 	int index = 0;
-
+	
 	LinkedList params = node.getParams();
-
+	
 	if (params != null) {
 
 	    Iterator it = params.iterator();
@@ -303,12 +302,12 @@ class FunctionMedian extends Function {
 	    while (it.hasNext()) {
 		// the first parameter
 		Node exp = (Node)it.next();
-
+		
 		if (isRange(exp)) {
 		    // if it's a range get each cell's value
 		    CellPoint[] addr =
 			getFirst(exp).getAddressRange(row, col);
-
+		    
 		    for (int i = addr[0].getRow(); i <= addr[1].getRow(); i++)
 			for (int j = addr[0].getCol(); j <= addr[1].getCol(); j++){
 			    values[index++] =
@@ -321,7 +320,7 @@ class FunctionMedian extends Function {
 			Formula.evaluate(table, exp.getExp(), row, col).floatValue();
 		}
 	    }
-
+	    
 	}
 
 	// sort the values array
@@ -335,7 +334,7 @@ class FunctionMedian extends Function {
 
 	// get the median
 	int half = nCells/2;
-
+	
 	if (nCells != half*2)
 	    return new Float(values[half]);
 	else
@@ -345,10 +344,10 @@ class FunctionMedian extends Function {
     public String getUsage() {
 	return "MEDIAN(value1,value2,...)";
     }
-
+    
     public String getDescription() {
 	return "Returns the median (value in the middle) of its arguments.";
-    }
+    }    
 }
 
 /**
@@ -358,16 +357,16 @@ class FunctionMedian extends Function {
  *   example: <code>=MIN(5,6,-1)</code> returns <code>-1.0</code>
  */
 class FunctionMin extends Function {
-
+    
     public Number evaluate(SharpTableModel table, Node node,
 			  int row, int col) throws ParserException {
-
+	
 	// requires parameters
 	checkParamsExist(node);
-
+	
 	float min = Float.MAX_VALUE;
 	LinkedList params = node.getParams();
-
+	
 	if (params != null) {
 
 	    Iterator it = params.iterator();
@@ -375,11 +374,11 @@ class FunctionMin extends Function {
 	    while (it.hasNext()) {
 
 		Node exp = (Node)it.next();
-
-		if (isRange(exp)) {
+		
+		if (isRange(exp)) {	    
 		    CellPoint[] addr =
 			getFirst(exp).getAddressRange(row, col);
-
+		    
 		    for (int i = addr[0].getRow(); i <= addr[1].getRow(); i++)
 			for (int j = addr[0].getCol(); j <= addr[1].getCol(); j++){
 			    float value =
@@ -395,19 +394,19 @@ class FunctionMin extends Function {
 			min = value;
 		}
 	    }
-
+	    
 	}
-
+	
 	return new Float(min);
     }
 
     public String getUsage() {
 	return "MIN(value1,value2,...)";
     }
-
+    
     public String getDescription() {
 	return "Returns the smallest number in a set of values.";
-    }
+    }        
 }
 
 /**
@@ -417,16 +416,16 @@ class FunctionMin extends Function {
  *   example: <code>=MAX(5,6,-1)</code> returns <code>6.0</code>
  */
 class FunctionMax extends Function {
-
+     
     public Number evaluate(SharpTableModel table, Node node,
 			  int row, int col) throws ParserException {
-
+	
 	// requires parameters
 	checkParamsExist(node);
-
+	
 	float max = Float.MIN_VALUE;
 	LinkedList params = node.getParams();
-
+	
 	if (params != null) {
 
 	    Iterator it = params.iterator();
@@ -434,11 +433,11 @@ class FunctionMax extends Function {
 	    while (it.hasNext()) {
 
 		Node exp = (Node)it.next();
-
-		if (isRange(exp)) {
+		
+		if (isRange(exp)) {	    
 		    CellPoint[] addr =
 			getFirst(exp).getAddressRange(row, col);
-
+		    
 		    for (int i = addr[0].getRow(); i <= addr[1].getRow(); i++)
 			for (int j = addr[0].getCol(); j <= addr[1].getCol(); j++){
 			    float value =
@@ -454,9 +453,9 @@ class FunctionMax extends Function {
 			max = value;
 		}
 	    }
-
+	    
 	}
-
+	
 	return new Float(max);
     }
 
@@ -464,10 +463,10 @@ class FunctionMax extends Function {
     public String getUsage() {
 	return "MAX(value1,value2,...)";
     }
-
+    
     public String getDescription() {
 	return "Returns the largest number in a set of values.";
-    }
+    }         
 }
 
 /**
@@ -483,7 +482,7 @@ class FunctionRange extends Function {
 	    floatValue();
 	float min = Formula.getFuncHandler("MIN").
 	    evaluate(table, node, row, col).
-	    floatValue();
+	    floatValue();	
 	return new Float(max - min);
     }
 
@@ -491,10 +490,10 @@ class FunctionRange extends Function {
     public String getUsage() {
 	return "RANGE(value1,value2,...)";
     }
-
+    
     public String getDescription() {
 	return "Returns the difference between MAX and MIN in a set of values.";
-    }
+    }    
 }
 
 /**
@@ -515,10 +514,10 @@ class FunctionAbs extends Function {
     public String getUsage() {
 	return "ABS(value)";
     }
-
+    
     public String getDescription() {
 	return "Returns the absolute value of a number.";
-    }
+    }         
 }
 
 /**
@@ -540,10 +539,10 @@ class FunctionSin extends Function {
     public String getUsage() {
 	return "SIN(value)";
     }
-
+    
     public String getDescription() {
 	return "Returns the sine of an angle.";
-    }
+    }         
 }
 
 /**
@@ -557,7 +556,7 @@ class FunctionCos extends Function {
 
     public Number evaluate(SharpTableModel table, Node node,
 			  int row, int col) throws ParserException {
-
+	
 	return new Float(Math.cos
 			 (getSingleParameter(table, node, row, col)));
     }
@@ -565,10 +564,10 @@ class FunctionCos extends Function {
     public String getUsage() {
 	return "COS(value)";
     }
-
+    
     public String getDescription() {
 	return "Returns the cosine of an angle.";
-    }
+    }         
 }
 
 /**
@@ -582,7 +581,7 @@ class FunctionTan extends Function {
 
     public Number evaluate(SharpTableModel table, Node node,
 			  int row, int col) throws ParserException {
-
+    
 	return new Float(Math.tan
 			 (getSingleParameter(table, node, row, col)));
     }
@@ -590,10 +589,10 @@ class FunctionTan extends Function {
     public String getUsage() {
 	return "TAN(value)";
     }
-
+    
     public String getDescription() {
 	return "Returns the tangent of an angle.";
-    }
+    }    
 }
 
 /**
@@ -614,10 +613,10 @@ class FunctionAsin extends Function {
     public String getUsage() {
 	return "ASIN(value)";
     }
-
+    
     public String getDescription() {
 	return "Returns the arcsine of a number in radians, in the range -Pi/2 to Pi/2.";
-    }
+    }             
 }
 
 /**
@@ -639,10 +638,10 @@ class FunctionAcos extends Function {
     public String getUsage() {
 	return "ACOS(value)";
     }
-
+    
     public String getDescription() {
 	return "Returns the arccosine of a number in radians, in the range 0 to Pi.";
-    }
+    }                 
 }
 
 /**
@@ -664,10 +663,10 @@ class FunctionAtan extends Function {
     public String getUsage() {
 	return "ATAN(value)";
     }
-
+    
     public String getDescription() {
 	return "Returns the arctangent of a number in radians, in the range -Pi/2 to Pi/2.";
-    }
+    }                 
 }
 
 /**
@@ -685,10 +684,10 @@ class FunctionInt extends Function {
     public String getUsage() {
 	return "INT(value)";
     }
-
+    
     public String getDescription() {
 	return "Returns the integer part of a number.";
-    }
+    }                 
 }
 
 /**
@@ -701,7 +700,7 @@ class FunctionRound extends Function {
 
     public Number evaluate(SharpTableModel table, Node node,
 			  int row, int col) throws ParserException {
-
+	
 	return new Float(Math.round
 			 (getSingleParameter(table, node, row, col)));
     }
@@ -709,7 +708,7 @@ class FunctionRound extends Function {
     public String getUsage() {
 	return "ROUND(value)";
     }
-
+    
     public String getDescription() {
 	return "Returns the nearest integer of a number.";
     }
@@ -733,10 +732,10 @@ class FunctionSqrt extends Function {
     public String getUsage() {
 	return "SQRT(value)";
     }
-
+    
     public String getDescription() {
 	return "Returns a square root of a number.";
-    }
+    }    
 }
 
 /**
@@ -757,7 +756,7 @@ class FunctionLog extends Function {
     public String getUsage() {
 	return "LOG(value)";
     }
-
+    
     public String getDescription() {
 	return "Returns the logarithm of a number to the base e.";
     }
@@ -769,10 +768,10 @@ class FunctionLog extends Function {
  *   returns the mean deviation of the specified parameters<br>
  *   example: <code>=STDDEV(100,60,60,80,80)</code> returns <code>12.8</code>
  */
-class FunctionMeandev extends Function {
+class FunctionMeandev extends Function {    
 
     // mean deviation is the average of absolute deviations from the mean value
-
+    
     public Number evaluate(SharpTableModel table, Node node,
 			  int row, int col) throws ParserException {
 
@@ -783,7 +782,7 @@ class FunctionMeandev extends Function {
 	    evaluate(table, node, row, col).floatValue();
 
 	LinkedList params = node.getParams();
-
+	
 	if (params != null) {
 
 	    Iterator it = params.iterator();
@@ -791,11 +790,11 @@ class FunctionMeandev extends Function {
 	    while (it.hasNext()) {
 
 		Node exp = (Node)it.next();
-
-		if (isRange(exp)) {
+		
+		if (isRange(exp)) {	    
 		    CellPoint[] addr =
 			getFirst(exp).getAddressRange(row, col);
-
+		    
 		    for (int i = addr[0].getRow(); i <= addr[1].getRow(); i++)
 			for (int j = addr[0].getCol(); j <= addr[1].getCol(); j++){
 			    dev += Math.abs(table.getNumericValueAt(i, j).
@@ -807,8 +806,8 @@ class FunctionMeandev extends Function {
 			Math.abs(Formula.evaluate(table, exp.getExp(), row, col).floatValue());
 		}
 	    }
-
-	}
+	    
+	}	
 
 	return new Float(dev/nCells);
     }
@@ -816,10 +815,10 @@ class FunctionMeandev extends Function {
     public String getUsage() {
 	return "MEANDEV(value1,value2,...)";
     }
-
+    
     public String getDescription() {
 	return "Returns the average absolute deviation in a set of values.";
-    }
+    }  
 }
 
 /**
@@ -841,7 +840,7 @@ class FunctionStddev extends Function {
 	    evaluate(table, node, row, col).floatValue();
 
 	LinkedList params = node.getParams();
-
+	
 	if (params != null) {
 
 	    Iterator it = params.iterator();
@@ -849,11 +848,11 @@ class FunctionStddev extends Function {
 	    while (it.hasNext()) {
 
 		Node exp = (Node)it.next();
-
-		if (isRange(exp)) {
+		
+		if (isRange(exp)) {	    
 		    CellPoint[] addr =
 			getFirst(exp).getAddressRange(row, col);
-
+		    
 		    for (int i = addr[0].getRow(); i <= addr[1].getRow(); i++)
 			for (int j = addr[0].getCol(); j <= addr[1].getCol(); j++){
 			    float temp = Math.abs(table.getNumericValueAt(i, j).
@@ -867,8 +866,8 @@ class FunctionStddev extends Function {
 
 		}
 	    }
-
-	}
+	    
+	}	
 
 	return new Float(Math.sqrt(dev/(nCells - 1)));
     }
@@ -876,7 +875,7 @@ class FunctionStddev extends Function {
     public String getUsage() {
 	return "STDDEV(value1,value2,...)";
     }
-
+    
     public String getDescription() {
 	return "Returns the standard deviation in a set of values.";
     }
@@ -890,21 +889,21 @@ class FunctionStddev extends Function {
  * example: <code>=PI()</code> returns <code>3.1415927</code>
  */
 class FunctionPI extends Function {
-
+    
     public Number evaluate(SharpTableModel table, Node node,
 			  int row, int col) throws ParserException {
 
 	// no parameters allowed
 	if (node.getParams().size() != 0)
 	    throw new ParserException("#PARAM?");
-
+		
 	return new Float(Math.PI);
     }
 
     public String getUsage() {
 	return "PI()";
     }
-
+    
     public String getDescription() {
 	return "Returns the value of PI.";
     }
@@ -920,7 +919,7 @@ class FunctionPI extends Function {
  * example: <code>=E()</code> returns <code>2.7182817</code>
  */
 class FunctionE extends Function {
-
+    
     public Number evaluate(SharpTableModel table, Node node,
 			  int row, int col) throws ParserException {
 
@@ -934,7 +933,7 @@ class FunctionE extends Function {
     public String getUsage() {
 	return "E()";
     }
-
+    
     public String getDescription() {
 	return "Returns value of e.";
     }

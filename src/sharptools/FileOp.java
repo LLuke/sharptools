@@ -1,12 +1,11 @@
 /*
  * @(#)FileOp.java
  *
- * $Id: FileOp.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
+ * $Id: FileOp.java,v 1.82 2001/06/03 22:21:01 huaz Exp $
  *
  * Created on November 16, 2000, 12:00 AM
  *
  */
-package sharptools;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -23,7 +22,7 @@ import java.sql.*;
  * appropriately.
  *
  * @author  Daniel Goldberg, Hua Zhong, Shiraz Kanga (openDb)
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.82 $
  */
 
 public class FileOp implements ActionListener, Printable {
@@ -33,7 +32,7 @@ public class FileOp implements ActionListener, Printable {
     final static private int DATABASE = 2;
 
     private int openType = UNNAMED;
-
+    
     private int maxNumPage = 1;
     private boolean columnOverflow;
 
@@ -44,7 +43,7 @@ public class FileOp implements ActionListener, Printable {
     private SharpTools sharp;
     private JTable table;
     private SharpTableModel tableModel;
-
+    
     private File file;
     private String password;
     //Create a file chooser
@@ -53,10 +52,10 @@ public class FileOp implements ActionListener, Printable {
     final private static ImageIcon newIcon = SharpTools.getImageIcon("new32.gif");
     final private static ImageIcon openIcon = SharpTools.getImageIcon("open.gif");
     final private static ImageIcon saveIcon = SharpTools.getImageIcon("save32.gif");
-    final private static String extname = ".cvs";
+    final private static String extname = ".csv";
 
     class SharpFileFilter extends javax.swing.filechooser.FileFilter {
-
+    
 	public boolean accept(File file) {
 	    if (file.isDirectory())
 		return true;
@@ -65,10 +64,10 @@ public class FileOp implements ActionListener, Printable {
 	}
 
 	public String getDescription() {
-	    return "Sharp Tools Spreadsheet (*.cvs)";
+	    return "Sharp Tools Spreadsheet (*.csv)";
 	}
     }
-    /**
+    /** 
      * This contructor creates a FileOperations object with reference
      * SharpTableModel; the file of the TableModel is extracted.
      *
@@ -92,7 +91,7 @@ public class FileOp implements ActionListener, Printable {
 	     KeyStroke.getKeyStroke
 	     (KeyEvent.VK_N,ActionEvent.CTRL_MASK,false),
 	     JComponent.WHEN_FOCUSED);
-
+	
 	table.registerKeyboardAction
 	    (this,"OpenFile",
 	     KeyStroke.getKeyStroke
@@ -104,7 +103,7 @@ public class FileOp implements ActionListener, Printable {
 	     KeyStroke.getKeyStroke
 	     (KeyEvent.VK_D,ActionEvent.CTRL_MASK,false),
 	     JComponent.WHEN_FOCUSED);
-
+	
 	table.registerKeyboardAction
 	    (this,"Save",
 	     KeyStroke.getKeyStroke
@@ -116,12 +115,12 @@ public class FileOp implements ActionListener, Printable {
 	     KeyStroke.getKeyStroke
 	     (KeyEvent.VK_P,ActionEvent.CTRL_MASK,false),
 	     JComponent.WHEN_FOCUSED);
-
+	
 	table.registerKeyboardAction
 	    (this,"Exit",
 	     KeyStroke.getKeyStroke
 	     (KeyEvent.VK_E,ActionEvent.CTRL_MASK,false),
-	     JComponent.WHEN_FOCUSED);
+	     JComponent.WHEN_FOCUSED);	     
     }
 
     /**
@@ -135,7 +134,7 @@ public class FileOp implements ActionListener, Printable {
 	String filename = "Untitled";
 	if (file != null)
 	    filename = file.getName();
-
+	
 	int choice =
 	    SharpOptionPane.showOptionDialog
 	    (sharp,
@@ -163,7 +162,7 @@ public class FileOp implements ActionListener, Printable {
 	    choice = queryForSave();
 	else
 	    choice = JOptionPane.NO_OPTION;
-
+	
 	switch(choice) {
 	case JOptionPane.YES_OPTION:
 	    // if user chooses yes in dialog box, save document first
@@ -218,7 +217,7 @@ public class FileOp implements ActionListener, Printable {
 	    }
         }
     }
-
+    
     /**
      * Menu and button wrapper that handles interactive process of saving
      * current file.
@@ -227,7 +226,7 @@ public class FileOp implements ActionListener, Printable {
     public void saveAsFile() {
 	// open save dialog and save user input
 	int choice = fileChooser.showSaveDialog(sharp);
-
+	
 	// if user clicks ok, then procede with save, otherwise do nothing
 	if(choice == JFileChooser.APPROVE_OPTION) {
 	    // get selected file to save to
@@ -264,7 +263,7 @@ public class FileOp implements ActionListener, Printable {
 		if (choice != JOptionPane.YES_OPTION)
 		    return;
 	    }
-
+	    
 	    saveTableModel(selectedfile);
 	}
     }
@@ -283,7 +282,7 @@ public class FileOp implements ActionListener, Printable {
 	    choice = queryForSave();
 	else
 	    choice = JOptionPane.NO_OPTION;
-
+	
 	switch(choice) {
 	  case JOptionPane.YES_OPTION:
 	      // if user chooses yes in dialog box, save document first
@@ -318,12 +317,12 @@ public class FileOp implements ActionListener, Printable {
      */
     public boolean closeFile() {
 	int choice;
-
+	
 	if(tableModel.isModified())
 	    choice = queryForSave();
 	else
 	    choice = JOptionPane.NO_OPTION;
-
+	
 	switch(choice) {
 	case JOptionPane.CANCEL_OPTION:
 	    return false;
@@ -336,32 +335,32 @@ public class FileOp implements ActionListener, Printable {
 	    return true;
 	}
     }
-
-
-    /**
+    
+    
+    /** 
      * Saves table model to specified file cell by cell in tab-delimited
      * format.
-     *
+     * 
      * @param aFile the file name to save to
      */
     public void saveTableModel(File aFile) {
 
 	try {
-
+	    
 	    // initialize output
 
 	    out = new PrintStream(new FileOutputStream(aFile));
-
+	    
 	    int rowCount = tableModel.getRowCount();
 	    int colCount = tableModel.getColumnCount();
 	    // print out number of columns and rows
 	    //	    out.println(rowCount+"\t"+colCount);
 	    if (password != null && password.length() > 0)
 		out.println("Password: "+password);
-
+	    
 	    out.print(tableModel.toString());
 	    out.flush();
-
+	    
 	    file = aFile;
 	    // set modified to false
 	    tableModel.setPasswordModified(false);
@@ -369,7 +368,7 @@ public class FileOp implements ActionListener, Printable {
 
 	    // update recent files
 	    addRecentFile(file);
-
+	    
 	    String title = file.getName();
 	    if (title.endsWith(extname))
 		title = title.substring(0, title.length()-4);
@@ -380,8 +379,8 @@ public class FileOp implements ActionListener, Printable {
 	    fileOpError("Save", "I/O error in saving \""+aFile.getName()+"\"!");
 	}
     }
-
-    /**
+    
+    /** 
      * Overloaded save function that takes the current filename  as default.
      */
     public void saveTableModel() {
@@ -390,7 +389,7 @@ public class FileOp implements ActionListener, Printable {
 
     /**
      * Opens table model data from file.
-     *
+     * 
      * @param aFile file name from which to open
      */
     public void openTableModel(File aFile) {
@@ -413,7 +412,7 @@ public class FileOp implements ActionListener, Printable {
 		textBuf.append(line);
 		textBuf.append("\n");
 	    }
-
+		
 	    while ((line = in.readLine()) != null) {
 		textBuf.append(line);
 		textBuf.append("\n");
@@ -444,13 +443,13 @@ public class FileOp implements ActionListener, Printable {
 
 	    // update recent files
 	    addRecentFile(file);
-
+	    
 	} catch (FileNotFoundException e) {
 	    fileOpError("Open", "File \""+aFile.getName()+"\" not found!");
 	} catch (IOException e) {
 	    fileOpError("Open", "I/O error in opening \""+aFile.getName()+"\"!");
 	} catch (Exception e) {
-
+            e.printStackTrace();
 	}
     }
 
@@ -472,7 +471,7 @@ public class FileOp implements ActionListener, Printable {
      * @param s file name
      */
     private void setRecentFile(int index, String s) {
-	Config config = SharpTools.getConfig();
+	Config config = SharpTools.getConfig();	
 	config.set("RECENTFILE"+String.valueOf(index), s);
     }
 
@@ -484,11 +483,11 @@ public class FileOp implements ActionListener, Printable {
     private void moveToFront(int index) {
 	if (index <= 0)
 	    return;
-
+	
 	String frontName = getRecentFile(index);
 	for (int i = index; i >0; i--)
 	    setRecentFile(i, getRecentFile(i-1));
-
+	
 	setRecentFile(0, frontName);
     }
 
@@ -502,7 +501,7 @@ public class FileOp implements ActionListener, Printable {
 		    return;
 		}
 	    }
-
+	    
 	    // now we push it
 	    setRecentFile(total-1, filename);
 	    moveToFront(total-1);
@@ -511,7 +510,7 @@ public class FileOp implements ActionListener, Printable {
 	}
     }
 
-
+    
     /**
      * construct the recent file list from Config
      *
@@ -520,7 +519,7 @@ public class FileOp implements ActionListener, Printable {
     public void createRecentFilesMenu(JMenu menu) {
         Config config = SharpTools.getConfig();
 	menu.removeAll();
-
+	
 	try {
 	    for (int i = 0; i < config.getInt("RECENTFILELIST"); i++) {
 		String filename = getRecentFile(i);
@@ -531,12 +530,12 @@ public class FileOp implements ActionListener, Printable {
 		    menu.add(item);
 		}
 	    }
-
+	    
 	}
 	catch (Exception e) {}
 
-    }
-
+    }    
+    
     /*
      * Set password and do some extra stuff - always use this function
      * to change password value!
@@ -545,7 +544,7 @@ public class FileOp implements ActionListener, Printable {
 	password = newPassword;
 	sharp.checkPasswordState();
     }
-
+    
     /*
      * Initiates print job by creating a <code>PrintJob</code> object,
      * and assigning the current <code>FileOp</code> object to it.
@@ -555,7 +554,7 @@ public class FileOp implements ActionListener, Printable {
      * care of the creation of a printable table
      */
     public void printData() {
-
+	
 	// create temporary object that contains this FileOp object
 	// and reset columnOverflow to false
 	FileOp fileOp = this;
@@ -565,7 +564,7 @@ public class FileOp implements ActionListener, Printable {
 	    PrinterJob prnJob = PrinterJob.getPrinterJob();
 
 	    prnJob.setPrintable(fileOp);
-
+	    
 	    // opens print dialog, and if user doesn't cancel the dialog
 	    // it calls print()
 	    if (!prnJob.printDialog())
@@ -579,11 +578,11 @@ public class FileOp implements ActionListener, Printable {
 	    fileOpError("Print", "Printing error: "+e.toString());
 	}
     }
-
+    
     /*
      * Main print method of FileOp that performs calculations for
      * dimensions of printed table, and writes the strings out to
-     * the <code>Graphics</code> object that is responsible for
+     * the <code>Graphics</code> object that is responsible for 
      * holding the printed data.  All parameters are called by Java
      * classes, specifically <code>PrintJob</code>, not explicitly in
      * our code
@@ -594,7 +593,7 @@ public class FileOp implements ActionListener, Printable {
      *
      * @return status of current call of print method
      */
-    public int print(Graphics pg, PageFormat pageFormat,
+    public int print(Graphics pg, PageFormat pageFormat, 
 		     int pageIndex) throws PrinterException {
 	// if pageIndex is beyond maximum page number, then
 	// don't return
@@ -602,7 +601,7 @@ public class FileOp implements ActionListener, Printable {
 	    return NO_SUCH_PAGE;
 
 	// set Graphics object to printed cartesian origin
-	pg.translate((int)pageFormat.getImageableX(),
+	pg.translate((int)pageFormat.getImageableX(), 
 		     (int)pageFormat.getImageableY());
 
 	// get printable width and height of page
@@ -619,7 +618,7 @@ public class FileOp implements ActionListener, Printable {
 	    wPage = (int)pageFormat.getImageableWidth();
 	    wPage += wPage/2;
 	    hPage = (int)pageFormat.getImageableHeight();
-
+	    
 	    wPage = 950;
 	    hPage = 550;
 
@@ -657,11 +656,11 @@ public class FileOp implements ActionListener, Printable {
 	int nColumns = colModel.getColumnCount();
 	int x[] = new int[nColumns];
 	x[0] = 0;
-
+        
 	int h = fm.getAscent();
 	y += h; // add ascent of header font because of baseline
 	// positioning (see figure 2.10)
-
+ 
 	int nRow, nCol;
 
 	// define widths of each column
@@ -671,7 +670,7 @@ public class FileOp implements ActionListener, Printable {
 	    // check if table width is within print width
 	    if (x[nCol] + width > wPage) {
 		nColumns = nCol;
-
+		
 		// show error one time if table width exceeds print width
 		if(!columnOverflow) {
 		    fileOpError("Print","Table width exceeds printed width,\nsome data will not be printed.");
@@ -687,7 +686,7 @@ public class FileOp implements ActionListener, Printable {
 	}
 	pg.setFont(table.getFont());
 	fm = pg.getFontMetrics();
-
+        
 	// find out number of rows that can be printed on current page
 	int header = y;
 	h = fm.getHeight();
@@ -698,9 +697,9 @@ public class FileOp implements ActionListener, Printable {
 
 	// calculate initial and final rows for current page
 	int iniRow = pageIndex*rowPerPage;
-	int endRow = Math.min(table.getRowCount(),
+	int endRow = Math.min(table.getRowCount(), 
 			      iniRow+rowPerPage);
-
+        
 	// iterate through each rows for this page
 	for (nRow=iniRow+1; nRow<endRow; nRow++) {
 
@@ -713,12 +712,12 @@ public class FileOp implements ActionListener, Printable {
 		String str = tableModel.getCellAt(nRow, nCol).getValue().toString();
 		// testcode
 //		System.out.println(str);
-
+		
 		pg.setColor(Color.black);
 		pg.drawString(str, x[nCol], y);
 	    }
 	}
-
+	
 	// explicit call on garbage collector to flush all temporary data
 	// used, such as graphics objects
 	System.gc();
@@ -738,12 +737,12 @@ public class FileOp implements ActionListener, Printable {
     /**
      * has password?
      *
-     *
+     * 
      */
     public boolean hasPassword() {
 	return password != null && password.length() > 0;
     }
-
+    
     /**
      * Set Password Dialog
      */
@@ -771,14 +770,14 @@ public class FileOp implements ActionListener, Printable {
 	table.requestFocus();
 	return text != null;
     }
-
+    
     /**
      * a function to display error messages
      *
      * @param op the operation that caused this error
      * @param error the error message
      */
-    private void fileOpError(String op, String error) {
+    private void fileOpError(String op, String error) {    
         SharpOptionPane.showMessageDialog(sharp, error, op,
 					  JOptionPane.ERROR_MESSAGE, null);
 	table.requestFocus();
@@ -804,10 +803,10 @@ public class FileOp implements ActionListener, Printable {
 	}
 	else if (e.getActionCommand().compareTo("OpenDb")==0) {
 	    openDb();
-	}
+	}	
 	else if (e.getActionCommand().compareTo("Save")==0) {
 	    saveFile();
-	}
+	}	
 	else if (e.getActionCommand().compareTo("Print")==0) {
 	    printData();
 	}
@@ -833,7 +832,7 @@ public class FileOp implements ActionListener, Printable {
 	    choice = queryForSave ();
 	else
 	    choice = JOptionPane.NO_OPTION;
-
+	
 	switch (choice) {
 	case JOptionPane.YES_OPTION:
 	    // if user chooses yes in dialog box, save document first
@@ -842,13 +841,13 @@ public class FileOp implements ActionListener, Printable {
 	case JOptionPane.NO_OPTION:
 	    Database db = new Database(sharp);
 	    db.connectDb();
-
+				 
 	default:
 	    // break out of loop for all choices.  action depends
 	    // on entry point.
 	    break;
 	}
-    }
+    }        
 }
 
 /**
@@ -859,7 +858,7 @@ public class FileOp implements ActionListener, Printable {
 class RecentFileListener implements ActionListener {
     File file;
     FileOp fileOp;
-
+    
     RecentFileListener(File file, FileOp fileOp) {
 	this.file = file;
 	this.fileOp = fileOp;

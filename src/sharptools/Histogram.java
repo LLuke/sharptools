@@ -1,12 +1,10 @@
 /*
  * @(#)Histogram.java
- *
- * $Id: Histogram.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
- *
+ * 
+ * $Id: Histogram.java,v 1.35 2001/05/27 22:29:29 huaz Exp $
+ * 
  * Created Novenmber 21, 2000, 11:27 PM
  */
-package sharptools;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -15,9 +13,9 @@ import javax.swing.*;
  * This is a fully functional histogram class (including UI).
  *
  * A tabbed panel is used.  Multiple histograms can be managed simultaneously.
- *
+ * 
  * @author Hua Zhong
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.35 $
  */
 
 public class Histogram extends JFrame implements ActionListener {
@@ -32,9 +30,9 @@ public class Histogram extends JFrame implements ActionListener {
     private Point location;
     private Dimension dim;
     final private ImageIcon histogramIcon = SharpTools.getImageIcon("chart.gif");
-
-    //    private int selected = -1;
-
+    
+    //    private int selected = -1;    
+    
     /**
      * Constructor:
      *
@@ -68,8 +66,8 @@ public class Histogram extends JFrame implements ActionListener {
 	    (this, "Add",
 	     KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK, false),
 	     JComponent.WHEN_FOCUSED);
-
-
+	
+	
 	Container container = getContentPane();
 	container.setLayout(new BorderLayout());
 
@@ -87,10 +85,10 @@ public class Histogram extends JFrame implements ActionListener {
     private void bringToFront() {
 	if (getState() == Frame.ICONIFIED)
 	    setState(Frame.NORMAL);
-
+	
 	toFront();
     }
-
+    
     /**
      * Show histograms
      */
@@ -121,9 +119,9 @@ public class Histogram extends JFrame implements ActionListener {
 	    show();
 
 	TabPanel newTab = new TabPanel(model, range, this, tab);
-
+	
 	tab.addTab(title, null, newTab, range.toString());
-
+	
 	tab.setSelectedIndex(tab.getTabCount()-1);
 	newTab.getOptions(true); // first time
     }
@@ -145,21 +143,21 @@ public class Histogram extends JFrame implements ActionListener {
      * Add Histogram
      */
     public void addHistogram() {
-	//checks if anything is selected
-	if (table.getSelectedRowCount() != 0) {
+	//checks if anything is selected	
+	if (table.getSelectedRowCount() != 0) { 
 	    CellRange range = new CellRange
 		(table.getSelectedRows(), table.getSelectedColumns());
 
 	    String title = "Chart "+(tab.getTabCount()+1);
 	    add(title, range);
-
+	    
 	    sharp.checkShowHistogramState();
-
+	    
 	} else {
             sharp.noCellsSelected("Histogram");
         }
-    }
-
+    }        
+        
     /**
      * Whether the histogram is currently having any defined charts
      *
