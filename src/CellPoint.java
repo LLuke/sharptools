@@ -1,7 +1,7 @@
 /*
- * @(#)CellPoint.jav
+ * @(#)CellPoint.java
  *
- * $Id: CellPoint.java,v 1.1.1.1 2001/11/03 05:39:13 huaz Exp $	
+ * $Id: CellPoint.java,v 1.2 2001/11/15 23:14:12 oleglebedev Exp $	
  *
  * Created on October 22, 2000, 4:54 PM
  */
@@ -14,7 +14,7 @@
  * parameters (ie. type column first and then row instead of the
  * other way around).
  * @author Ricky Chin
- * @version $Revision: 1.1.1.1 $
+ * @version $Revision: 1.2 $
  */
 public class CellPoint implements Comparable {
     /** This hold row coordinate of a cell */
