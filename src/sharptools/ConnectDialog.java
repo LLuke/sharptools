@@ -1,7 +1,7 @@
 /*
  * @ (#)ConnectDialog.java
  *
- * $Id: ConnectDialog.java,v 1.1.1.1 2001/11/03 05:39:13 huaz Exp $
+ * $Id: ConnectDialog.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
  *
  * Created on May 19, 2001, 09:10:28 PM
  *
@@ -10,6 +10,7 @@
  * first version - Shiraz Kanga
  * various fixes and enhancements - Hua Zhong
  */
+package sharptools;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,14 +23,14 @@ import java.util.Vector;
 /**
  * This class provides a database conection dialog.
  * User is prompted to choose various database options.
- * 
+ *
  * @author Shiraz Kanga (first version)
  * @author Hua Zhong (ported to SharpDialog and various enhancements)
- * @version $Revision: 1.1.1.1 $
+ * @version $Revision: 1.1 $
  */
 
 public class ConnectDialog extends SharpDialog {
-    
+
     private JFrame frame;
     private JOptionPane optionPane;
     private JCheckBox lockTableBox;
@@ -38,9 +39,9 @@ public class ConnectDialog extends SharpDialog {
     final private static ImageIcon removeIcon = SharpTools.getImageIcon ("no.gif");
     final private static ImageIcon databaseIcon = SharpTools.getImageIcon ("database32.gif");
     final private static ImageIcon dbErrorIcon = null;
-    
+
     private Connection dbConnection = null;
-    
+
     final private JTextField connectnameField = new JTextField ();
     final private JTextField usernameField = new JTextField ();
     final private JPasswordField passwordField = new JPasswordField ();
@@ -51,16 +52,16 @@ public class ConnectDialog extends SharpDialog {
     final private JCheckBox savePassword = new JCheckBox("Save Password", false);
 
     private int maxConn = 0;
-    
+
     final private JButton removeButton = new JButton("Remove", removeIcon);
     private JComboBox box;
-    
+
     public ConnectDialog (JFrame aFrame) {
 	super (aFrame, "Connect to Database", true);
-	
+
 	frame = aFrame;
 
-	//various properties of the dialog labels and text fields	
+	//various properties of the dialog labels and text fields
 	final String msgString0 = "Connection Name:";
 	final String msgString1 = "Username:";
 	final String msgString2 = "Password:";
@@ -72,21 +73,21 @@ public class ConnectDialog extends SharpDialog {
 
 	final Vector possibleValues = new Vector();
 	possibleValues.add("Previous connections");
-	
+
 	// use Vector so that we won't enter null pointers in - huaz
 	for (int i=1; i<=maxConn; i++) {
 	    String entry = config.get ("CONNECTION." + i + ".NAME");
 	    if (entry != null && entry.length() > 0)
 		possibleValues.add(entry);
 	    else
-		break;    
+		break;
 	}
 
 	box = new JComboBox(possibleValues);
 	box.addItemListener(new ItemListener() {
 		public void itemStateChanged(ItemEvent e) {
 		    if (e.getStateChange() == ItemEvent.SELECTED) {
-			    
+
 			//			Config config = SharpTools.getConfig();
 			int index = box.getSelectedIndex();
 			if (index <= 0)
@@ -140,19 +141,19 @@ public class ConnectDialog extends SharpDialog {
 	JPanel cbPanel = new JPanel(new FlowLayout());
 	cbPanel.add(saveConnection);
 	cbPanel.add(savePassword);
-	
+
 	Object[] input = {
 	    panel,
 	    msgString0, connectnameField, msgString1, usernameField,
 	    msgString2, passwordField, msgString3, driverField,
 	    msgString4, urlField, cbPanel
 	};
-	
+
 	setOptionPane (input,
 		       JOptionPane.PLAIN_MESSAGE,
 		       JOptionPane.OK_CANCEL_OPTION,
 		       databaseIcon);
-	
+
     }
 
     public Connection getConnection() {
@@ -164,8 +165,8 @@ public class ConnectDialog extends SharpDialog {
         String dbUsername = usernameField.getText ().trim();
         String dbPassword = String.copyValueOf(passwordField.getPassword ());
         String dbDriver = driverField.getText ().trim();
-	String dbUrl = urlField.getText ().trim();	
-	
+	String dbUrl = urlField.getText ().trim();
+
 	// validation moved from Database.java - huaz
 
 	if ((dbUsername == null || dbUsername.length () == 0) &&
@@ -187,7 +188,7 @@ public class ConnectDialog extends SharpDialog {
 					       "Class Not Found", JOptionPane.ERROR_MESSAGE, dbErrorIcon);
 	    return false;
 	}
-	
+
 	try {
 	    dbConnection =  DriverManager.getConnection (dbUrl, dbUsername, dbPassword);
 	}
@@ -195,24 +196,24 @@ public class ConnectDialog extends SharpDialog {
 	    SharpOptionPane.showMessageDialog (this, "Unable to connect to the database at " + dbUrl + ".\nPlease ensure that the URL, Username and Password are correct.\n\n" + e.toString (),
 					       "Connect", JOptionPane.ERROR_MESSAGE, dbErrorIcon);
 	    return false;
-	}	
-	
+	}
+
 	// now we could try to save the connection - huaz
-	
+
 	// if saveConnection is not checked we just return
 	if (! saveConnection.isSelected())
 	    return true;
-	
+
 	// if no name provided we don't save
 	if (connectName.length() == 0) {
 	    SharpOptionPane.showMessageDialog(this, "You did not enter a connection name.\n\nThis connection succeeded but will not be saved.\n", "Save Connection", JOptionPane.WARNING_MESSAGE);
 	    return true;
 	}
-	    
+
 
 	// first check whether the connectName is already saved
 	int index;
-	
+
 	for (index = 1; index < box.getItemCount(); index++)
 	    if (connectName.equals(box.getItemAt(index).toString()))
 		break;
@@ -220,7 +221,7 @@ public class ConnectDialog extends SharpDialog {
 	if ((index != box.getItemCount() || box.getItemCount() <= maxConn)) {
 	    String key = "CONNECTION."+index;
 	    Debug.println("Saving "+key);
-	
+
 	    Config config = SharpTools.getConfig();
 	    config.set(key+".NAME", connectName);
 	    config.set(key+".USERNAME", dbUsername);
@@ -231,7 +232,7 @@ public class ConnectDialog extends SharpDialog {
 	}
 	else
 	    SharpOptionPane.showMessageDialog(this, "You have defined "+maxConn+" connections.\nYour current connection setting cannot be saved.\n\nRefer to the manual for advanced configuration.\n", "Save Connection", JOptionPane.WARNING_MESSAGE);
-	    
+
         return true;
     }
 

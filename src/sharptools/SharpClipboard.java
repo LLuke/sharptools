@@ -1,10 +1,11 @@
 /*
  * @(#)SharpClipboard.java
  *
- * $Id: SharpClipboard.java,v 1.1.1.1 2001/11/03 05:39:14 huaz Exp $
+ * $Id: SharpClipboard.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
  *
  * Created on October 27, 2000, 9:40 PM
  */
+package sharptools;
 
 /** This clipboard class holds the objects that will be  cut and pasted to
  * a spreadsheet. Actually, it creates a string representation of the range
@@ -13,7 +14,7 @@
  * which it was created. This class is used for many table manipulation
  * methods.
  * @author Ricky Chin
- * @version $Revision: 1.1.1.1 $
+ * @version $Revision: 1.1 $
  */
 public class SharpClipboard {
 
@@ -23,7 +24,7 @@ public class SharpClipboard {
     /** the range of Cells from which the clipboard was created
      */
     private CellRange source;
-    
+
     /** Creates new SharpClipboard. If it is a cut, then it clears the range it
      * was created from.
      * @param model the SharpTableModel you are operating on
@@ -38,13 +39,13 @@ public class SharpClipboard {
 	text = model.toString(range, false);
 
         source = range;
-        
+
         //if it is a cut, set the old cells to null
         if (isCut) {
             model.clearRange(range);
         }
     }
-    
+
     /** This gets the actual range of a paste from a corner point. This is
      * actually a helper method for paste
      * @param corner the upper left corner coordinate
@@ -55,11 +56,11 @@ public class SharpClipboard {
         //limit to paste region
         int rowLimit = model.getRowCount() - 1;
         int colLimit = model.getColumnCount() - 1;
-        
+
         //calculate dimensions of clipboard
         int rowMax = corner.getRow() + source.getHeight() - 1;
         int colMax = corner.getCol() + source.getWidth() - 1;
-        
+
         //cannot paste to nonexistent cells
         if ((corner.getRow() < SharpTools.baseRow) ||
 	    (corner.getCol() < SharpTools.baseCol)) {
@@ -71,7 +72,7 @@ public class SharpClipboard {
 					       Math.min(colMax, colLimit)));
         }
     }
-            
+
     /** This pastes the current contents of the spreadsheet object
      * on to the region defined by the coordinates of the upper
      * right hand corner. If the contents cannot be entirely pasted
@@ -100,15 +101,15 @@ public class SharpClipboard {
 	    //	    table.setRange(range, board, byValue);
 	    table.fromString(text, rowOff, colOff, range);
 	}
-    }            
-    
+    }
+
     /** This method returns the range the clipboard originally can from
      * @return the range the clipboard originally can from
      */
     public CellRange getSource() {
         return source;
     }
-    
+
     /** Set the source of the clipboard
      * @param x CellRange to set as the source of the clipboard
      */

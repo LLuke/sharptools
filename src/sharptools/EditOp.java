@@ -1,10 +1,11 @@
 /*
  * @(#)EditOp.java
  *
- * $Id: EditOp.java,v 1.1.1.1 2001/11/03 05:39:13 huaz Exp $
+ * $Id: EditOp.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
  *
  * Created on November 19, 2000, 02:16:16 AM
  */
+package sharptools;
 
 import javax.swing.*;
 import java.util.*;
@@ -14,9 +15,9 @@ import java.awt.event.*;
 import java.awt.datatransfer.*;
 /**
  * This contain certain higher level edit operations on the spreadsheet table
- * 
+ *
  * @author Hua Zhong
- * @version $Revision: 1.1.1.1 $
+ * @version $Revision: 1.1 $
  */
 public class EditOp implements ActionListener {
 
@@ -29,7 +30,7 @@ public class EditOp implements ActionListener {
     private CellPoint copyPoint = new CellPoint(SharpTools.baseRow, SharpTools.baseCol);
 
     private Clipboard system;
-    
+
     // used for Find and Find Next
     //    private String fillValue;
     private String findValue;
@@ -39,7 +40,7 @@ public class EditOp implements ActionListener {
     //    private SharpClipboard clipboard;
     final private static ImageIcon fillIcon = SharpTools.getImageIcon("fill32.gif");
     final private static ImageIcon findIcon = SharpTools.getImageIcon("find32.gif");
-    
+
     /** constructor
      *
      * @param sharp the GUI object
@@ -51,23 +52,23 @@ public class EditOp implements ActionListener {
 	// Identifying the undo KeyStroke user can modify this
 	// to undo on some other Key combination.
 	KeyStroke undo = KeyStroke.getKeyStroke
-	    (KeyEvent.VK_Z,ActionEvent.CTRL_MASK,false);	
+	    (KeyEvent.VK_Z,ActionEvent.CTRL_MASK,false);
 
 	// Identifying the undo KeyStroke user can modify this
 	// to undo on some other Key combination.
 	KeyStroke redo = KeyStroke.getKeyStroke
 	    (KeyEvent.VK_Y,ActionEvent.CTRL_MASK,false);
-	
+
 	// Identifying the cut KeyStroke user can modify this
 	// to cut on some other Key combination.
 	KeyStroke cut = KeyStroke.getKeyStroke
 	    (KeyEvent.VK_X,ActionEvent.CTRL_MASK,false);
-	
+
 	// Identifying the copy KeyStroke user can modify this
 	// to copy on some other Key combination.
 	KeyStroke copy = KeyStroke.getKeyStroke
-	    (KeyEvent.VK_C,ActionEvent.CTRL_MASK,false);	
-	
+	    (KeyEvent.VK_C,ActionEvent.CTRL_MASK,false);
+
 	// Identifying the Paste KeyStroke user can modify this
 	// to copy on some other Key combination.
 	KeyStroke paste = KeyStroke.getKeyStroke
@@ -75,7 +76,7 @@ public class EditOp implements ActionListener {
 
 	KeyStroke fill = KeyStroke.getKeyStroke
 	    (KeyEvent.VK_L, ActionEvent.CTRL_MASK, false);
-	
+
 	KeyStroke clear = KeyStroke.getKeyStroke
 	    (KeyEvent.VK_DELETE, 0, false);
 
@@ -83,16 +84,16 @@ public class EditOp implements ActionListener {
 	// to find on some other Key combination.
 	KeyStroke find = KeyStroke.getKeyStroke
 	    (KeyEvent.VK_F,ActionEvent.CTRL_MASK,false);
-	
+
 	KeyStroke findnext = KeyStroke.getKeyStroke
 	    (KeyEvent.VK_F3,0,false);
-	
+
 	table.registerKeyboardAction(this,"Undo", undo,
 				     JComponent.WHEN_FOCUSED);
 
 	table.registerKeyboardAction(this,"Redo", redo,
-				     JComponent.WHEN_FOCUSED);	
-	
+				     JComponent.WHEN_FOCUSED);
+
 	table.registerKeyboardAction(this,"Cut", cut,
 				     JComponent.WHEN_FOCUSED);
 
@@ -104,13 +105,13 @@ public class EditOp implements ActionListener {
 
 	table.registerKeyboardAction(this,"Fill",fill,
 				     JComponent.WHEN_FOCUSED);
-	
+
 	table.registerKeyboardAction(this,"Clear",clear,
 				     JComponent.WHEN_FOCUSED);
 
 	table.registerKeyboardAction(this,"Find",find,
 				     JComponent.WHEN_FOCUSED);
-	
+
 	table.registerKeyboardAction(this,"Find Next",findnext,
 				     JComponent.WHEN_FOCUSED);
 
@@ -129,7 +130,7 @@ public class EditOp implements ActionListener {
 	tableModel = sharp.getTableModel();
 	history = sharp.getHistory();
     }
-    
+
     /**
      * Perfroms a clipboard function of cutting COPY + CLEAR
      *
@@ -145,20 +146,20 @@ public class EditOp implements ActionListener {
     public void copy() {
 	doCopy(false); //sets isCut to false
     }
-    
+
     /**
      * Performs a clipboard function of cut/copy
      *
      * @param isCut true for cut, false for copy
      */
     private void doCopy(boolean isCut) {
-	if (table.getSelectedRowCount() != 0) { 
+	if (table.getSelectedRowCount() != 0) {
 	    CellRange range = new CellRange(
                          table.getSelectedRows(), table.getSelectedColumns());
 
 	    if (isCut) {
 		history.add(tableModel, range);
-	    }	    
+	    }
 
 	    //	    toolBar.getComponent(8).setEnabled(true);
 	    // now do the copy operation
@@ -166,10 +167,10 @@ public class EditOp implements ActionListener {
 
 	    int startRow = table.getSelectedRow();
 	    int startCol = table.getSelectedColumn();
-	    
+
 	    int numrows=table.getSelectedRowCount();
 	    int numcols=table.getSelectedColumnCount();
-	    
+
 	    copyPoint = new CellPoint(table.getSelectedRow(),
 				      table.getSelectedColumn());
 
@@ -180,7 +181,7 @@ public class EditOp implements ActionListener {
 
 	    if (isCut)
 		tableModel.clearRange(range);
-	    
+
 	} else {
             if (isCut) {
 	        sharp.noCellsSelected("Cut");
@@ -194,16 +195,16 @@ public class EditOp implements ActionListener {
      * Performs a clipboard function of pasting
      */
     public void paste(){
-        //checks if anything is selected	
+        //checks if anything is selected
         if (table.getSelectedRowCount() != 0) {
 	    int startRow=table.getSelectedRow();
-	    int startCol=table.getSelectedColumn(); 
-	    
+	    int startCol=table.getSelectedColumn();
+
 	    int rowOff = startRow-copyPoint.getRow();
 	    int colOff = startCol-copyPoint.getCol();
-	    
+
 	    try {
-		
+
 		String trstring=
 		    (String)(system.getContents(this).
 			     getTransferData(DataFlavor.stringFlavor));
@@ -219,7 +220,7 @@ public class EditOp implements ActionListener {
 		// add to history
 		history.add(tableModel, affectedRange);
 		//		System.out.println(affectedRange);
-		
+
 		tableModel.fromString(trstring, rowOff, colOff, affectedRange);
 	    }
 	    catch(Exception e){
@@ -228,8 +229,8 @@ public class EditOp implements ActionListener {
 	} else {
 	    sharp.noCellsSelected("Paste");
 	}
-    }    
-    /** 
+    }
+    /**
      * Wrapper function to clear cell and range of cells....
      */
     public void clear() {
@@ -240,13 +241,13 @@ public class EditOp implements ActionListener {
 	    history.add(tableModel, range);
 	    Debug.println("Clear");
 	    tableModel.clearRange(range);
-	} else { 
+	} else {
 	    sharp.noCellsSelected("Clear");
 	}
     }
 
 
-    /** 
+    /**
      * Wrapper function to fill a range of cell with a user defined value
      */
     public void fill() {
@@ -262,14 +263,14 @@ public class EditOp implements ActionListener {
 		fillValue = "="+first.getFormula().toString();
 	    else
 		fillValue = first.getValue().toString();
-	    
+
 	    Object inputValue =
 		SharpOptionPane.showInputDialog
 		(sharp, "Please enter a value to fill the range",
 		 "Fill", JOptionPane.INFORMATION_MESSAGE,
 		 fillIcon, null, fillValue);
 
-	    //if input is cancelled or nothing is entered 
+	    //if input is cancelled or nothing is entered
 	    //then don't change anything
 	    if (inputValue != null){
 		if (((String)inputValue).length() != 0) {
@@ -278,12 +279,12 @@ public class EditOp implements ActionListener {
 		    //		    fillValue = inputValue;
 		}
 	    }
-	}else { 
+	}else {
 	    sharp.noCellsSelected("Fill");
 	}
     }
 
-    /** 
+    /**
      * Wrapper function to fill a range of cell with a user defined value
      *
      * @param newValue is true if it should require a new value (Find...)
@@ -291,7 +292,7 @@ public class EditOp implements ActionListener {
      */
     public void find(boolean newValue) {
         CellPoint start;
-        
+
 	//checks if anything is selected
 
 	if (table.getSelectedRowCount() != 0) {
@@ -305,9 +306,9 @@ public class EditOp implements ActionListener {
 		    y = 1;
 		    x++;
 		}
-	    
+
 	    start = new CellPoint(x, y);
-	    
+
         }
 	else {
 	    // or start from the beginning
@@ -324,14 +325,14 @@ public class EditOp implements ActionListener {
 	    findDialog.setVisible(true);
 
 	    String inputValue = findDialog.getString();
-	    /*	    
+	    /*
 	    matchCase = findDialog.isCaseSensitive();
 	    matchCell = findDialog.isCellMatching();
 
 	    Debug.println("case sens : " + findDialog.isCaseSensitive());
 	    Debug.println("match cell : " + findDialog.isCellMatching());
 	    */
-	    //if input is cancelled or nothing is entered 
+	    //if input is cancelled or nothing is entered
 	    //then don't change anything
 	    if (inputValue == null || inputValue.length() == 0)
 		return;
@@ -343,7 +344,7 @@ public class EditOp implements ActionListener {
 		Debug.println("case sens : " + findDialog.isCaseSensitive());
 		Debug.println("match cell : " + findDialog.isCellMatching());
 	    }
-		
+
 	}
 	else if (!hasFindValue())
 	    return;
@@ -351,7 +352,7 @@ public class EditOp implements ActionListener {
 	CellPoint found = tableModel.look(start, SharpTableModel.fieldParser(findValue), matchCase, matchCell);
 	if (found != null) {
 	    //System.out.println(found);
-	    table.setColumnSelectionInterval(found.getCol(), 
+	    table.setColumnSelectionInterval(found.getCol(),
 					     found.getCol());
 	    table.setRowSelectionInterval(found.getRow(),
 					  found.getRow());
@@ -359,12 +360,12 @@ public class EditOp implements ActionListener {
 	    table.scrollRectToVisible
 		(new Rectangle
 		    (table.getCellRect(found.getRow(), found.getCol(), true)));
-	}	
+	}
 	else {
 	    SharpOptionPane.showMessageDialog
 		(sharp, "SharpTools has finished the search and no more \"" + findValue + "\" is found.",
 		 "Find Completed",
-		 JOptionPane.INFORMATION_MESSAGE, findIcon); 
+		 JOptionPane.INFORMATION_MESSAGE, findIcon);
 	}
     }
 
@@ -381,7 +382,7 @@ public class EditOp implements ActionListener {
 	findValue = s;
 	sharp.checkFindNextState();
     }
-    
+
     /**
      * Whether the clipboard has data
      *
@@ -389,10 +390,10 @@ public class EditOp implements ActionListener {
      */
     /*
       public boolean hasClipboard() {
-      return 
+      return
       }
     */
-    
+
    /**
     * This method is activated on the Keystrokes we are listening to
     * in this implementation. Here it listens for keystroke
@@ -410,13 +411,13 @@ public class EditOp implements ActionListener {
 	}
 	else if (e.getActionCommand().compareTo("Redo")==0) {
 	    history.redo(tableModel);
-	}	
+	}
 	else if (e.getActionCommand().compareTo("Cut")==0) {
 	    cut();
-	}	
+	}
 	else if (e.getActionCommand().compareTo("Copy")==0) {
 	    copy();
-	}		
+	}
 	else if (e.getActionCommand().compareTo("Paste")==0) {
 	    paste();
 	}

@@ -1,10 +1,11 @@
 /*
  * @(#)AddressField.java
- * 
- * $Id: AddressField.java,v 1.1.1.1 2001/11/03 05:39:13 huaz Exp $
- * 
+ *
+ * $Id: AddressField.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
+ *
  * Created Novenmber 25, 2000, 5:13 AM
  */
+package sharptools;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -19,7 +20,7 @@ import javax.swing.text.*;
  * @see NumberField
  *
  * @author Hua Zhong
- * @version $Revision: 1.1.1.1 $
+ * @version $Revision: 1.1 $
  */
 public class AddressField extends JTextField {
 
@@ -44,7 +45,7 @@ public class AddressField extends JTextField {
 	    setText(point.toString());
     }
 
-    
+
     //    public Object getValue() { return getAddress(); }
 
     // a class used to filter the user's input
@@ -59,7 +60,7 @@ public class AddressField extends JTextField {
 	public void insertString(int offset, String text, AttributeSet aset)
 	    throws BadLocationException {
 	    if (text == null || text.length() == 0)
-		return;	    
+		return;
 
 	    __scratchBuffer.setLength(0);
 
@@ -77,10 +78,10 @@ public class AddressField extends JTextField {
 		sioobe.printStackTrace();
 		return;
 	    }
-	    
+
 	    String buf = __scratchBuffer.toString();
 	    boolean hasNumber = false;
-	    
+
 	    // only allow {letters}{numbers}
 	    for (int i=0; i<buf.length(); i++) {
 		char c = buf.charAt(i);
@@ -98,15 +99,15 @@ public class AddressField extends JTextField {
 		}
 		else if (hasNumber) // should not be letter anymore
 		    return;
-	    }		    
-	    
+	    }
+
 	    super.insertString(offset, text.toUpperCase(), aset);
 	}
     }
 
-    
+
     /**
-     * Construct an address only text field.  
+     * Construct an address only text field.
      *
      * @param columns the length of the text field
      */

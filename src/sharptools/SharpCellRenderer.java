@@ -1,10 +1,11 @@
 /*
  * SharpCellRenderer.java
  *
- * $Id: SharpCellRenderer.java,v 1.1.1.1 2001/11/03 05:39:14 huaz Exp $
+ * $Id: SharpCellRenderer.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
  *
  * Created on October 26, 2000, 9:23 PM
  */
+package sharptools;
 
 import javax.swing.*;
 import javax.swing.*;
@@ -24,11 +25,11 @@ import java.awt.Rectangle;
  * be changed to toggle between displaying the text and value of a formula
  * cell. This was done in a previous version but is not removed.
  * @author Ricky Chin
- * @version $Revision: 1.1.1.1 $
+ * @version $Revision: 1.1 $
  */
 public class SharpCellRenderer extends DefaultTableCellRenderer {
 
-    /** 
+    /**
      * Creates a SharpCellRenderer.
      */
     public SharpCellRenderer() {
@@ -39,7 +40,7 @@ public class SharpCellRenderer extends DefaultTableCellRenderer {
     /**
      * Returns the default table cell renderer.
      * @param table  the <code>JTable</code>
-     * @param value  the value to assign to the cell at 
+     * @param value  the value to assign to the cell at
      *                                   <code>[row, column]</code>
      * @param isSelected true if cell is selected
      * @param hasFocus true if cell has focus
@@ -64,7 +65,7 @@ public class SharpCellRenderer extends DefaultTableCellRenderer {
 		super.setBackground(table.getBackground());
 	    }
 	}
-	
+
 	setFont(table.getFont());
 
 	if (hasFocus) {
@@ -80,19 +81,19 @@ public class SharpCellRenderer extends DefaultTableCellRenderer {
 	}
 
         /* this method has been changed for formula feature */
-        setValue(value, isSelected, hasFocus, row, column); 
+        setValue(value, isSelected, hasFocus, row, column);
 
         //DefaulTableCellRenderer code
 	// begin optimization to avoid painting background
 	Color back = getBackground();
-	boolean colorMatch = (back != null) && 
+	boolean colorMatch = (back != null) &&
                     ( back.equals(table.getBackground()) ) && table.isOpaque();
         setOpaque(!colorMatch);
 	// end optimization to aviod painting background
 
 	return this;
     }
-    
+
     /**
      * Sets the string for the cell being rendered to <code>value</code>.
      * @param value  the string value for this cell; if value is
@@ -108,7 +109,7 @@ public class SharpCellRenderer extends DefaultTableCellRenderer {
             //we only care about the value, not the formula string
             Cell temp = (Cell)value;
 	    Object data = temp.getValue();
-            
+
 	    if (isHeaderCell(row, column)) {
                 //label cells are center aligned
 		setHorizontalAlignment(JTextField.CENTER);
@@ -121,7 +122,7 @@ public class SharpCellRenderer extends DefaultTableCellRenderer {
 		    setHorizontalAlignment(JTextField.LEFT);
 	        }
             }
-            
+
             //value to display in table
 	    setText((data == null) ? "" : data.toString());
         }
@@ -137,7 +138,7 @@ public class SharpCellRenderer extends DefaultTableCellRenderer {
      * @param row the int value of the row
      * @param column the int value of the column
      * @return true if row = column = 0.
-     */    
+     */
     protected boolean isHeaderCell(int row, int column) {
 	return (/*row == 0 || */column == SharpTools.baseCol-1);
     }

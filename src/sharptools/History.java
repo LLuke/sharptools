@@ -1,10 +1,12 @@
 /*
  * @(#)History.java
  *
- * $Id: History.java,v 1.1.1.1 2001/11/03 05:39:14 huaz Exp $
+ * $Id: History.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
  *
  * Created on November 15, 2000, 10:38 PM
  */
+package sharptools;
+
 import java.util.*;
 import javax.swing.*;
 
@@ -27,11 +29,11 @@ import javax.swing.*;
  *</ol>
  *
  * @author Hua Zhong <huaz@cs.columbia.edu>
- * @version $Revision: 1.1.1.1 $
+ * @version $Revision: 1.1 $
  */
 public class History {
 
-/** 
+/**
  * This is the doubly linked list class that undo/redo is implemented with.
  * It has a type, an object and two pointers (prev, next).
  */
@@ -41,22 +43,22 @@ public class History {
 	private ListNode next; // points to next node
 	private int type; // one of the 5 History static values defined below
 	private Object obj; // could be a SharpClipboard or a CellRange
-	
+
 	ListNode(Object obj) {
 	    setObject(obj);
 	}
 
 	// simple get/set functions
 	Object getObject() { return obj; }
-	ListNode getPrev() { return prev; }    
+	ListNode getPrev() { return prev; }
 	ListNode getNext() { return next; }
-	
+
 	void setObject(Object obj) { this.obj = obj; }
 	void setPrev(ListNode prev) { this.prev = prev; }
 	void setNext(ListNode next) { this.next = next; }
-	
-	int getType() { return type; }    
-	void setType(int type) { this.type = type; }    
+
+	int getType() { return type; }
+	void setType(int type) { this.type = type; }
     }
 
     private SharpTools sharp;
@@ -76,10 +78,10 @@ public class History {
      */
     History(SharpTools sharp) {
 	this.sharp = sharp;
-	current = new ListNode(null);	
+	current = new ListNode(null);
     }
 
-    /** 
+    /**
      * This adds the range of cells to the history.
      *
      * @param model the SharpTableModel we operate on
@@ -91,7 +93,7 @@ public class History {
         add(model, clip);
     }
 
-    /** 
+    /**
      * This adds a clipboard object to the history list.
      *
      * @param model the SharpTableModel we operate on
@@ -125,13 +127,13 @@ public class History {
      */
     public void add(SharpTableModel model, CellRange range, int type) {
 	SharpClipboard clip;
-	ListNode node;	
+	ListNode node;
 
 	if (type == UNCHANGED) {
 	    add(model, range);
 	    return;
 	}
-	    
+
 	if (type == REMOVEROW || type == REMOVECOLUMN) {
 	    // save the current range
 	    //	    System.out.println("Add history of removing "+range);
@@ -144,7 +146,7 @@ public class History {
 	    // just save the range value
 	    node = new ListNode(range);
 	}
-	
+
 	node.setType(type);
 
 	// add to the end of history list
@@ -168,16 +170,16 @@ public class History {
 
 	int type = current.getType();
 	CellRange range;
-	
+
 	if (type == UNCHANGED) {
 	    // get the saved clipboard and its range
 	    SharpClipboard oldClip = (SharpClipboard)current.getObject();
 	    range = oldClip.getSource();
-	
+
 	    // replace the current object with the current table data
 	    SharpClipboard newClip = new SharpClipboard(model, range, false);
 	    current.setObject(newClip);
-	
+
 	    //	    Debug.println("Undo "+range);
 
 	    // recover the data (undo)
@@ -233,17 +235,17 @@ public class History {
     public void redo(SharpTableModel model) {
 	if (!isRedoable())
 	    return;
-	
+
 	current = current.getNext();
 	int type = current.getType();
 	CellRange range;
-	
+
 	if (type == UNCHANGED) {
 
 	    // get the saved clipboard
 	    SharpClipboard oldClip = (SharpClipboard)current.getObject();
 	    range = oldClip.getSource();
-	
+
 	    // replace the current object with the current model data
 	    SharpClipboard newClip = new SharpClipboard(model, range, false);
 	    current.setObject(newClip);
@@ -266,11 +268,11 @@ public class History {
 	else {
 	    // redo an insertion
 	    range = (CellRange)current.getObject();
-	    
+
 	    if (type == INSERTROW)
 		model.insertRow(range);
 	    else
-		model.insertColumn(range);	    
+		model.insertColumn(range);
 	}
 
 	model.setModified(true);

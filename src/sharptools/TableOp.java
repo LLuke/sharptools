@@ -1,10 +1,11 @@
  /*
   * @(#)TableOp.java
   *
-  * $Id: TableOp.java,v 1.1.1.1 2001/11/03 05:39:14 huaz Exp $
+  * $Id: TableOp.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
   *
   * Created on November 5, 2000, 11:21 PM
   */
+package sharptools;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -14,12 +15,12 @@ import java.util.*;
 /**
  * This contain certain higher level operations on the spreadsheet table
  * such as sorting.
- * 
+ *
  * @author Ricky Chin
- * @version $Revision: 1.1.1.1 $
+ * @version $Revision: 1.1 $
  */
-public class TableOp implements ActionListener {     
-    
+public class TableOp implements ActionListener {
+
     // these variables correspond to the variables in SharpTools
     private SharpTools sharp;
     private JTable table;
@@ -28,12 +29,12 @@ public class TableOp implements ActionListener {
     private JToolBar toolBar;
     final static private ImageIcon colwidthIcon = SharpTools.getImageIcon("colwidth.gif");
     //    private Histogram histo;
-    
+
     // constructor
     TableOp(SharpTools sharp) {
 	init(sharp);
 	sharp.checkFindNextState();
-	
+
 	// Identifying the Insert/Delete KeyStroke user can modify this
 	// to some other Key combination.
 
@@ -68,7 +69,7 @@ public class TableOp implements ActionListener {
 
 	table.registerKeyboardAction(this,"Delete Column",deletecolumn,
 				     JComponent.WHEN_FOCUSED);
-	
+
     }
 
     /**
@@ -83,14 +84,14 @@ public class TableOp implements ActionListener {
 	history = sharp.getHistory();
 	toolBar = sharp.getToolBar();
     }
-    
-    
+
+
     /* insert a row or column */
     public void insert(boolean byRow) {
         //checks if anything is selected
 	int insertNum = table.getSelectedRowCount();
         if (insertNum != 0) {
-	    
+
             if (byRow) {
 		int row = table.getSelectedRow();
 		CellRange range =
@@ -110,18 +111,18 @@ public class TableOp implements ActionListener {
 
 		history.add(tableModel, range, History.INSERTCOLUMN);
 	        tableModel.insertColumn(range);
-                
+
             }
-        }else { 
+        }else {
 	    sharp.noCellsSelected("Insert");
         }
     }
 
     public void remove(boolean byRow) {
 	int removeNum = table.getSelectedRowCount();
-	
+
         //checks if anything is selected
-	
+
         if (removeNum != 0) {
 
             if (byRow) {
@@ -130,7 +131,7 @@ public class TableOp implements ActionListener {
 		    tooMuchDeletion();
 		    return;
 		}
-		
+
 		int row = table.getSelectedRow();
 		CellRange range =
 		    new CellRange(new CellPoint(row, SharpTools.baseCol),
@@ -152,30 +153,30 @@ public class TableOp implements ActionListener {
 		    tooMuchDeletion();
 		    return;
 		}
-		
+
 		CellRange range =
 		    new CellRange(new CellPoint(SharpTools.baseRow, column),
 				  new CellPoint(tableModel.getRowCount()-1,
 						column+removeNum-1));
-		
+
 		if (tableModel.isDeletionSafe(range, false) || unsafeDeletion()) {
 		    history.add(tableModel, range, History.REMOVECOLUMN);
 		    Debug.println(range);
 		    tableModel.removeColumn(range);
 		}
-            }		
-		
-        }else { 
+            }
+
+        }else {
 	    sharp.noCellsSelected("Remove");
         }
     }
-    
+
     public void sort(boolean byRow) {
-	//checks if anything is selected	
-	if (table.getSelectedRowCount() != 0) { 
+	//checks if anything is selected
+	if (table.getSelectedRowCount() != 0) {
 	    CellRange range = new CellRange
 		(table.getSelectedRows(), table.getSelectedColumns());
-	      
+
 
 	    //gets parameters for combo box in dialog
 	    Vector primary = new Vector();
@@ -198,14 +199,14 @@ public class TableOp implements ActionListener {
 	    sortDialog.pack();
 	    sortDialog.setLocationRelativeTo(sharp);
 	    sortDialog.setVisible(true);
-	
-	    
+
+
 	    Debug.println("Here we go " + sortDialog.getCriteriaA() + ": And : " + sortDialog.getCriteriaB());
 	    Debug.println(sortDialog.firstAscending() + " : " + sortDialog.secondAscending());
 	    int first = sortDialog.getCriteriaA();
 	    //check to see if there is sorting criteria
 	    if (first >= 0) {
-                history.add(tableModel, range);    
+                history.add(tableModel, range);
 		//translate first to col/row number
 		if (byRow) {
 		    first += range.getStartRow();
@@ -224,7 +225,7 @@ public class TableOp implements ActionListener {
 			second += range.getStartCol() -  1;
 		    }
 
-		    tableModel.sort(range, first, second, byRow, 
+		    tableModel.sort(range, first, second, byRow,
 				    sortDialog.firstAscending(),
 				    sortDialog.secondAscending());
 		}else {
@@ -257,11 +258,11 @@ public class TableOp implements ActionListener {
 	    }
 	    catch (Exception e) {
 	    }
-	}	
+	}
     }
-    
+
     private boolean unsafeDeletion() {
-	
+
         int choice =
 	    SharpOptionPane.showOptionDialog
 	    (sharp,
@@ -298,13 +299,13 @@ public class TableOp implements ActionListener {
 	}
 	else if (e.getActionCommand().compareTo("Insert Column")==0) {
 	    insert(false);
-	}	
+	}
 	else if (e.getActionCommand().compareTo("Delete Row")==0) {
 	    remove(true);
-	}	
+	}
 	else if (e.getActionCommand().compareTo("Delete Column")==0) {
 	    remove(false);
-	}		
+	}
     }
-    
+
 }

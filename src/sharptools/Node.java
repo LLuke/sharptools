@@ -1,13 +1,14 @@
 /*
  * @(#)Node.java
- * 
- * $Id: Node.java,v 1.1.1.1 2001/11/03 05:39:14 huaz Exp $
- * 
+ *
+ * $Id: Node.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
+ *
  * Created on October 18, 2000, 3:27 PM
  */
+package sharptools;
 
 import java.io.*;
-import java.util.*;    
+import java.util.*;
 
 /**
  * Node is basic unit for Formula processing.
@@ -28,7 +29,7 @@ import java.util.*;
  * @see Formula
  *
  * @author Hua Zhong <huaz@cs.columbia.edu>
- * @version $Revision: 1.1.1.1 $
+ * @version $Revision: 1.1 $
  */
 public class Node {
     public static final int DEFAULT = 0; // reserved
@@ -43,7 +44,7 @@ public class Node {
     public static final int COLON = 9; // :
     public static final int EXP = 10; // an expression.  the exp field counts.
     // for each function param, its type is EXP
-    
+
     private static final String[] desc = {
     	"Default", "Rel_Addr", "Abs_Addr", "Function",
     	"LBracket", "RBracket", "Number", "Operator",
@@ -68,7 +69,7 @@ public class Node {
     private Node nextRange;
 
     private boolean pending; // used for processing functions, see Formula
-    
+
     /**
      * This is an empty node constructor
      */
@@ -79,7 +80,7 @@ public class Node {
      * Node constructor
      *
      * @param node
-     */    
+     */
     Node(Node node) {
 	type = node.type;
 	if (data != null)
@@ -92,30 +93,30 @@ public class Node {
     /** get/set functions */
     public int getType() { return type; }
     public boolean isType(int type) { return this.type == type; }
-    
+
     public float getNumber() { return number; }
     public String getData() { return data; }
-    
+
     public LinkedList getParams() { return exp; }
     public Node getNextRange() { return nextRange; }
     public LinkedList getExp() { return exp; }
-    
+
     public int getRow() { return row; }
     public int getCol() { return col; }
-    
+
     public void setType(int type) { this.type = type; }
     public void setNumber(float number) { this.number = number; }
 
     public void setData(String data) { this.data = data; }
     public void appendData(char data) { this.data += data; }
     public void appendData(String data) { this.data += data; }
-    
+
     public void setParams(LinkedList list) { exp = list; }
     public void addParam(Node node) {
 	if (node.getExp().size()>0)
 	    exp.add(node);
     }
-    
+
     public void setNextRange(Node node) { nextRange = node; }
     public void setExp(LinkedList exp) { this.exp = exp; }
 
@@ -130,7 +131,7 @@ public class Node {
 		type == Node.ABS_ADDR || type == Node.FUNCTION ||
 		type == Node.RPAREN);
     }
-    
+
     /**
      *  This string funciton is for debug purpose only.
      *  Node -> String
@@ -139,7 +140,7 @@ public class Node {
 	//	return String.valueOf(type);
 
 	switch (type) {
-	case Node.NUMBER:	    
+	case Node.NUMBER:
 	    return Float.toString(number);
 	case Node.REL_ADDR:
 	    StringBuffer buf1 = new StringBuffer();
@@ -168,7 +169,7 @@ public class Node {
 	    return ",";
 	case Node.COLON:
 	    return nextRange.toString()+":"+nextRange.nextRange.toString();
-	    
+
 	default:
 	    return data;
 	}
@@ -201,10 +202,10 @@ public class Node {
 
     /**
      * This translates the string form of column into column number ('A' -> 1)
-     * 
+     *
      * @param column the string value of the column to be converted
      * @return the int value of the column
-     */	
+     */
     public static int translateColumn(String column) {
 	int col = 0;
 
@@ -217,10 +218,10 @@ public class Node {
 
     /**
      * This translates the int form of column into column string (1 -> 'A')
-     * 
+     *
      * @param column the int value of the column to be converted
      * @return the string value of the column
-     */	
+     */
     public static String translateColumn(int column) {
 
 	column = column - SharpTools.baseCol +1;
@@ -228,7 +229,7 @@ public class Node {
 	    return null;
 
 	StringBuffer buf = new StringBuffer();
-	
+
 	String colstr = "";
 
 	int div = 1;
@@ -240,7 +241,7 @@ public class Node {
 	    colstr = buf.toString();
 	    column = div;
 	}
-	
+
 	return colstr;
     }
 
@@ -270,7 +271,7 @@ public class Node {
      * @param row the int value fo the row
      * @param col the int value of the column
      * @return two CellPoint value for the range
-     */     
+     */
     public CellPoint[] getAddressRange(int row, int col) {
 
 	CellPoint[] addr = new CellPoint[2];
@@ -287,7 +288,7 @@ public class Node {
 				    min(addr1.getCol(), addr2.getCol())
 				    );
 	    addr[1] = new CellPoint(
-				    max(addr1.getRow(), addr2.getRow()),    
+				    max(addr1.getRow(), addr2.getRow()),
 				    max(addr1.getCol(), addr2.getCol())
 				    );
 	}
@@ -297,8 +298,8 @@ public class Node {
 	    addr[0] = cell;
 	    addr[1] = cell;
 	}
-	    
-	return addr;	
+
+	return addr;
     }
 
 }

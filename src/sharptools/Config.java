@@ -1,10 +1,11 @@
 /*
  * @(#)SharpTools.java
- * 
- * $Id: Config.java,v 1.1.1.1 2001/11/03 05:39:13 huaz Exp $
- * 
+ *
+ * $Id: Config.java,v 1.1 2001/11/15 23:21:00 oleglebedev Exp $
+ *
  * Created on October 10, 2000, 1:15 AM
  */
+package sharptools;
 
 import java.util.*;
 import java.io.*;
@@ -17,9 +18,9 @@ import java.io.*;
  *
  * Note, Config only saves a pair when the key is already in the config file.
  * This is very important!!!
- * 
+ *
  * @author  Hua Zhong <huaz@cs.columbia.edu>
- * @version $Revision: 1.1.1.1 $
+ * @version $Revision: 1.1 $
  */
 
 final class Config {
@@ -27,7 +28,7 @@ final class Config {
     private HashMap map;
     private File file;
     private boolean modified;
-    
+
     Config(String filename) {
 	modified = false;
 	map = new HashMap();
@@ -39,14 +40,14 @@ final class Config {
 	Debug.println("Loading configuration file...");
     	try {
 	    // open the file
-	    BufferedReader in = new BufferedReader
-		(new FileReader(file));
+            BufferedReader in = SharpTools.fileReader.getFileReader(file.getName());
+
 	    String line;
 	    while ((line = in.readLine()) != null) {
 
 		// convert to <key,value> pair
 		String[] pair = getPair(line);
-		
+
 		if (pair == null)
 		    continue;
 
@@ -71,11 +72,11 @@ final class Config {
     public void save() {
 	if (!modified)
 	    return;
-	
+
 	Debug.println("Saving configuration file...");
 	String tmpfilename = file+".tmp";
 	File tmp = new File(tmpfilename);
-	
+
     	try {
 	    // open the file
 	    BufferedReader in = new BufferedReader
@@ -83,10 +84,10 @@ final class Config {
 	    PrintWriter out = new PrintWriter
 		(new BufferedWriter
 		    (new FileWriter(tmp)));
-	    
+
 	    String line;
 	    while ((line = in.readLine()) != null) {
-		
+
 		String[] pair = getPair(line.toUpperCase());
 
 		if (pair != null && pair[0] != null &&
@@ -114,7 +115,7 @@ final class Config {
 	tmp.renameTo(file);
 	modified = false;
     }
-    
+
     /**
      * If a string is of form "Str1=Str2", return a pair
      *
@@ -122,7 +123,7 @@ final class Config {
      * @return a pair of (key, value); null if it's not a pair
      */
     private String[] getPair(String line) {
-	
+
 	int index = line.indexOf('=');
 	if (index < 0)
 	    return null;
@@ -130,12 +131,12 @@ final class Config {
 	// ignore comments
 	if (line.startsWith("#") || line.startsWith(";"))
 	    return null;
-	
+
 	String[] pair = new String[2];
 	pair[0] = line.substring(0, index).trim();
 	pair[1] = line.substring(index+1).trim();
 	return pair;
-	
+
     }
 
     /**
@@ -185,7 +186,7 @@ final class Config {
 	return value.equals("TRUE");
     }
 
-    
+
     /**
      * set value by string name
      *
@@ -210,12 +211,12 @@ final class Config {
     /**
      * set boolean value by string name
      *
-     * @param key the variable name     
+     * @param key the variable name
      * @param value the boolean value
      */
     public void setBoolean(String key, boolean value) {
 	set(key, value?"TRUE":"FALSE");
-    }    
+    }
 }
 
 

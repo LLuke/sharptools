@@ -1,10 +1,12 @@
-/** 
+/**
  * This is a customized dialog which provides standard buttons.
- * 
+ *
  * @author Hua Zhong
- * @version $Revision: 1.1.1.1 $
+ * @version $Revision: 1.1 $
  *
  */
+package sharptools;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -18,13 +20,13 @@ import java.awt.event.*;
  * @see ConnectDialog
  */
 class SharpDialog extends JDialog {
-    
+
     static final public int CLOSED_OPTION = JOptionPane.CLOSED_OPTION;
     static final public int YES_OPTION = JOptionPane.YES_OPTION;
     static final public int NO_OPTION = JOptionPane.NO_OPTION;
     static final public int OK_OPTION = JOptionPane.OK_OPTION;
     static final public int CANCEL_OPTION = JOptionPane.CANCEL_OPTION;
-    
+
     static final private ImageIcon okIcon = SharpTools.getImageIcon("ok.gif");
     static final private ImageIcon cancelIcon = SharpTools.getImageIcon("cancel.gif");
     static final private ImageIcon noIcon = SharpTools.getImageIcon("no.gif");
@@ -55,7 +57,7 @@ class SharpDialog extends JDialog {
 
     /**
      * @param c parent dialog
-     * @param model whether to create a modal dialog 
+     * @param model whether to create a modal dialog
      */
     SharpDialog(Dialog c, boolean modal) {
 	super(c, modal);
@@ -74,7 +76,7 @@ class SharpDialog extends JDialog {
     /**
      * @param c parent dialog
      * @param title title
-     * @param model whether to create a modal dialog 
+     * @param model whether to create a modal dialog
      */
     SharpDialog(Dialog c, String title, boolean modal) {
 	super(c, title, modal);
@@ -91,7 +93,7 @@ class SharpDialog extends JDialog {
 
     /**
      * @param c parent frame
-     * @param model whether to create a modal dialog 
+     * @param model whether to create a modal dialog
      */
     SharpDialog(Frame c, boolean modal) {
 	super(c, modal);
@@ -110,7 +112,7 @@ class SharpDialog extends JDialog {
     /**
      * @param c parent frame
      * @param title title
-     * @param model whether to create a modal dialog 
+     * @param model whether to create a modal dialog
      */
     SharpDialog(Frame c, String title, boolean modal) {
 	super(c, title, modal);
@@ -127,7 +129,7 @@ class SharpDialog extends JDialog {
 	rootPane.registerKeyboardAction(
 					new ActionListener() {
 						public void actionPerformed
-						    (ActionEvent ev) {    
+						    (ActionEvent ev) {
 						    if (onClose()) {
 							choice = CLOSED_OPTION;
 							setVisible(false);
@@ -149,9 +151,9 @@ class SharpDialog extends JDialog {
      *
      */
     protected void onOpen() {
-	
+
     }
-    
+
     /**
      *
      * This function is called when
@@ -172,10 +174,10 @@ class SharpDialog extends JDialog {
      *
      * @return whether the dialog should be closed
      */
-    protected boolean onOK() {	
+    protected boolean onOK() {
 	return true;
     }
-    
+
     /**
      *
      * This function is called when the Cancel button is pressed
@@ -219,10 +221,10 @@ class SharpDialog extends JDialog {
 				 int messageType,
 				 int optionType,
 				 Icon icon) {
-	
+
 	setOptionPane(message, messageType, optionType, icon, 0);
     }
-    
+
     /**
      * This is used by subclasses to set the JOptionPane component
      * in the dialog.
@@ -236,16 +238,16 @@ class SharpDialog extends JDialog {
     protected void setOptionPane(Object message,
 				 int messageType,
 				 int optionType,
-				 Icon icon,			       
+				 Icon icon,
 				 int defaultIndex) {
-	
+
 	addWindowListener(new WindowAdapter() {
 
 		public void windowOpened(WindowEvent we) {
 		    // set the initial focus to rowField
 		    onOpen();
 		}
-		
+
                 public void windowClosing(WindowEvent we) {
 		    if (onClose()) {
 			choice = CLOSED_OPTION;
@@ -253,7 +255,7 @@ class SharpDialog extends JDialog {
 		    }
 		}
 	    });
-	
+
 	// handle this by onClose()
 	setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
@@ -274,7 +276,7 @@ class SharpDialog extends JDialog {
 		    }
 		}
 	    });
-	
+
 	yesButton.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent evt) {
 		    if (onYes()) {
@@ -283,7 +285,7 @@ class SharpDialog extends JDialog {
 		    }
 		}
 	    });
-	
+
 	noButton.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent evt) {
 		    if (onNo()) {
@@ -298,13 +300,13 @@ class SharpDialog extends JDialog {
 	cancelButton.setMnemonic (KeyEvent.VK_C);
 	yesButton.setMnemonic (KeyEvent.VK_Y);
 	noButton.setMnemonic (KeyEvent.VK_N);
-	
+
 	Object[] buttons = setButtons(optionType);
 	JOptionPane optionPane = new JOptionPane(message, messageType,
 						 optionType, icon,
 						 buttons,
 						 buttons[defaultIndex]);
-	
+
 	setContentPane(optionPane);
 
 	pack();
@@ -317,7 +319,7 @@ class SharpDialog extends JDialog {
     private Object[] setButtons(int type) {
 
 	Object[] buttons;
-	
+
 	switch (type) {
 	case JOptionPane.YES_NO_CANCEL_OPTION:
 	    buttons = yesnocancel;
@@ -325,7 +327,7 @@ class SharpDialog extends JDialog {
 	case JOptionPane.YES_NO_OPTION:
 	    buttons = yesno;
 	    break;
-	case JOptionPane.OK_CANCEL_OPTION:	    
+	case JOptionPane.OK_CANCEL_OPTION:
 	    buttons = okcancel;
 	    break;
 	default:
@@ -345,7 +347,7 @@ class SharpDialog extends JDialog {
 
     /**
      * @return whether this operation was cancelled
-     */    
+     */
     public boolean isCancelled() {
 	return choice == CANCEL_OPTION || choice == CLOSED_OPTION;
     }
