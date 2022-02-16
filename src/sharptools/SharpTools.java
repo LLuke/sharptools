@@ -1,7 +1,7 @@
 /*
  * @(#)SharpTools.java
  * 
- * $Id: SharpTools.java,v 1.176 2001/06/09 05:15:40 huaz Exp $
+ * $Id: SharpTools.java,v 1.178 2002/08/08 05:15:08 huaz Exp $
  * 
  * Created on October 10, 2000, 1:15 AM
  */
@@ -26,7 +26,7 @@ import java.net.*;
  * @author  Daniel Goldberg (initial UI)
  * @author  Andrei Scudder, Daniel Medina (more work)
  * @author  Hua Zhong (complete for v1.0)
- * @version $Revision: 1.176 $
+ * @version $Revision: 1.178 $
  */
 final public class SharpTools extends JFrame implements ListSelectionListener {
 

@@ -2,8 +2,16 @@
 Change logs
 ===================================
 
-The latest snapshot
+1.41
 
+- Quick fix for column name resolution and column removal bug
+  Thanks to Marc Herbert for reporting/fixing the problem.
+
+1.4
+
+- Made SharpTools compatible with JDK 1.4 (thus version number is 1.4)
+- Fixed row/column insertion bugs
+- ".CVS" should be ".CSV"
 - Fixed bin/SharpTools so you can execute from a different directory
   (SharpTools.bat still has to be executed in the bin directory - anyone
   knows how to fix?  Please let me know.)

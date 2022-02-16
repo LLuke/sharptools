@@ -1,7 +1,7 @@
  /*
   * @(#)TableOp.java
   *
-  * $Id: TableOp.java,v 1.38 2001/06/03 22:21:14 huaz Exp $
+  * $Id: TableOp.java,v 1.40 2002/08/08 05:15:09 huaz Exp $
   *
   * Created on November 5, 2000, 11:21 PM
   */
@@ -16,7 +16,7 @@ import java.util.*;
  * such as sorting.
  * 
  * @author Ricky Chin
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.40 $
  */
 public class TableOp implements ActionListener {     
     

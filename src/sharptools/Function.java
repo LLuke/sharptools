@@ -1,7 +1,7 @@
 /*
  * @(#)Function.java
  * 
- * $Id: Function.java,v 1.22 2000/12/06 03:13:18 huaz Exp $
+ * $Id: Function.java,v 1.24 2002/08/08 05:15:04 huaz Exp $
  *
  * Created on October 30, 2000, 10:29 AM
  */
@@ -18,7 +18,7 @@ import java.io.*;
  * is a number, a relative/absolute address or an address range (e.g., A1:B3).
  *
  * @author Hua Zhong
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.24 $
  */
 public abstract class Function {    
 

@@ -1,7 +1,7 @@
 /*
  * @(#)HelpOp.java
  *
- * $Id: HelpOp.java,v 1.19 2001/05/27 22:30:41 huaz Exp $
+ * $Id: HelpOp.java,v 1.21 2002/08/08 05:15:05 huaz Exp $
  *
  * Created on October 22, 2000, 2:46 AM
  */
@@ -22,7 +22,7 @@ import javax.swing.text.*;
  * This html browser allows for the browsing of local help files. 
  *
  * @author Daniel Medina, Daniel Goldberg
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.21 $
  */
 public class HelpOp {
 
@@ -94,7 +94,7 @@ public class HelpOp {
     }
 
     final static String message =
-	"<html><font size=3 color=black><p><font size=+1 color=blue><b>Sharp Tools Spreadsheet</b></font> Version 1.4</p>"+
+	"<html><font size=3 color=black><p><font size=+1 color=blue><b>Sharp Tools Spreadsheet</b></font> Version 1.41</p>"+
 	"<p><p>a product of the Sharp Tools Software Engineering Team"+
         "<p>Copyright (c) 2000-2002"+
 	"<p><p><font color=green><b>Credits:</b><font></p>"+

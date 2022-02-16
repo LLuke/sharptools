@@ -1,7 +1,7 @@
 /*
  * @ (#)Database.java
  *
- * $Id: Database.java,v 1.5 2001/05/27 22:29:10 huaz Exp $
+ * $Id: Database.java,v 1.7 2002/08/08 05:15:02 huaz Exp $
  *
  * Created on May 19, 2001, 09:10:28 PM
  *
@@ -39,7 +39,7 @@ import javax.swing.*;
  * This contains database operations on the spreadsheet table
  *
  * @author  Shiraz Kanga
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.7 $
  */
 public class Database
 {

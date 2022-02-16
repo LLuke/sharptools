@@ -1,7 +1,7 @@
 #
 # @(#)Makefile
 #
-# $Id: GNUmakefile,v 1.1.1.1 2001/11/03 05:39:14 huaz Exp $
+# $Id: GNUmakefile,v 1.24 2001/05/27 03:13:04 huaz Exp $
 #
 # Created on October 29, 2000, 5:20 PM
 #

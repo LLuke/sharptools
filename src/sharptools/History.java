@@ -1,7 +1,7 @@
 /*
  * @(#)History.java
  *
- * $Id: History.java,v 1.24 2001/06/03 22:21:42 huaz Exp $
+ * $Id: History.java,v 1.26 2002/08/08 05:15:06 huaz Exp $
  *
  * Created on November 15, 2000, 10:38 PM
  */
@@ -27,7 +27,7 @@ import javax.swing.*;
  *</ol>
  *
  * @author Hua Zhong <huaz@cs.columbia.edu>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.26 $
  */
 public class History {
 

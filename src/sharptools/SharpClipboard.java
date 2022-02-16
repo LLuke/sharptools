@@ -1,7 +1,7 @@
 /*
  * @(#)SharpClipboard.java
  *
- * $Id: SharpClipboard.java,v 1.16 2000/12/02 21:44:53 rkc10 Exp $
+ * $Id: SharpClipboard.java,v 1.18 2002/08/08 05:15:07 huaz Exp $
  *
  * Created on October 27, 2000, 9:40 PM
  */
@@ -13,7 +13,7 @@
  * which it was created. This class is used for many table manipulation
  * methods.
  * @author Ricky Chin
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.18 $
  */
 public class SharpClipboard {
 

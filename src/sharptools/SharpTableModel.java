@@ -1,7 +1,7 @@
 /*
  * @(#)SharpTable.java
  * 
- * $Id: SharpTableModel.java,v 1.89 2001/06/03 22:20:15 huaz Exp $
+ * $Id: SharpTableModel.java,v 1.91 2002/08/08 05:15:07 huaz Exp $
  *
  * Created on October 14, 2000, 8:10 PM
  */
@@ -24,7 +24,7 @@ import javax.swing.event.TableColumnModelEvent;
  * the Cell object. If you modified the cell class please check the methods
  * in this class.
  * @author Ricky Chin
- * @version $Revision: 1.89 $
+ * @version $Revision: 1.91 $
  */
 public class SharpTableModel extends DefaultTableModel {
     

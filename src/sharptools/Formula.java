@@ -1,7 +1,7 @@
 /*
  * @(#)Formula.java
  * 
- * $Id: Formula.java,v 1.72 2001/05/27 03:13:04 huaz Exp $
+ * $Id: Formula.java,v 1.74 2002/08/08 05:15:04 huaz Exp $
  * 
  * Created October 18, 2000, 3:27 PM
  */
@@ -25,7 +25,7 @@ import java.io.*;
  * @see ParserException
  *
  * @author Hua Zhong <huaz@cs.columbia.edu>
- * @version $Revision: 1.72 $
+ * @version $Revision: 1.74 $
  */
 
 public class Formula {

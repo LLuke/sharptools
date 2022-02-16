@@ -1,7 +1,7 @@
 /*
  * @ (#)ConnectDialog.java
  *
- * $Id: ConnectDialog.java,v 1.8 2001/05/27 22:28:57 huaz Exp $
+ * $Id: ConnectDialog.java,v 1.11 2002/08/08 05:15:02 huaz Exp $
  *
  * Created on May 19, 2001, 09:10:28 PM
  *
@@ -25,7 +25,7 @@ import java.util.Vector;
  * 
  * @author Shiraz Kanga (first version)
  * @author Hua Zhong (ported to SharpDialog and various enhancements)
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.11 $
  */
 
 public class ConnectDialog extends SharpDialog {

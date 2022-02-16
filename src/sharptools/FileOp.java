@@ -1,7 +1,7 @@
 /*
  * @(#)FileOp.java
  *
- * $Id: FileOp.java,v 1.82 2001/06/03 22:21:01 huaz Exp $
+ * $Id: FileOp.java,v 1.84 2002/08/08 05:15:03 huaz Exp $
  *
  * Created on November 16, 2000, 12:00 AM
  *
@@ -22,7 +22,7 @@ import java.sql.*;
  * appropriately.
  *
  * @author  Daniel Goldberg, Hua Zhong, Shiraz Kanga (openDb)
- * @version $Revision: 1.82 $
+ * @version $Revision: 1.84 $
  */
 
 public class FileOp implements ActionListener, Printable {
